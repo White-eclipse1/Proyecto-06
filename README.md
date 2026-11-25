@@ -7,6 +7,8 @@
 **Proyecto:** Proyecto 6  
 **Universidad:** ITESO  
 
+**Estado actual:** base de inferencia real de P5 integrada y probada. Las secciones de monitoreo, métricas G1–G7, eventos, alertas, portal y escenarios C1/C2 describen el alcance futuro; aún no están implementadas ni validadas.
+
 ---
 
 ## 1. Descripción
@@ -282,7 +284,7 @@ Los nombres de archivos pueden variar durante la implementación, pero se conser
 
 ## Requisitos
 
-- Python 3.10 o superior
+- Python 3.12 para las versiones fijadas del pipeline de inferencia
 - Node.js 18 o superior
 - Git
 
@@ -313,6 +315,12 @@ Instalar dependencias:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Obtener y verificar los pesos públicos del modelo:
+
+```powershell
+python scripts/get_model.py
 ```
 
 Para el portal:
@@ -389,17 +397,18 @@ Si se utiliza video o una secuencia de imágenes, los frames se suministran prog
 
 El modelo se ejecuta realmente sobre las imágenes recibidas.
 
-Información final del artefacto:
+Información verificada del artefacto:
 
 ```text
-Modelo: [COMPLETAR]
-Versión: [COMPLETAR]
-Archivo: [COMPLETAR]
-SHA-256: [COMPLETAR]
-Runtime: [COMPLETAR]
-Clases: [COMPLETAR]
-Preprocesamiento: [COMPLETAR]
-Origen: Proyecto 5 / [COMPLETAR]
+Modelo: YOLOX-Tiny preentrenado en COCO
+Versión: release 0.1.1rc0
+Archivo: modelo/yolox_tiny.onnx (descarga local, excluida de Git)
+SHA-256 local: 427cc366d34e27ff7a03e2899b5e3671425c262ea2291f88bb942bc1cc70b0f7
+Runtime: onnxruntime 1.31.1, CPUExecutionProvider
+Clases: 80 clases COCO, orden en src/inference/coco_classes.py
+Preprocesamiento: BGR, mediana 3×3, letterbox 416×416 con relleno 114,
+                  CHW float32, rango 0–255 sin normalización
+Origen: Proyecto 5 / release YOLOX 0.1.1rc0 de Megvii-BaseDetection
 ```
 
 El modelo puede encontrarse directamente en el repositorio o recuperarse siguiendo las instrucciones documentadas en:
@@ -409,6 +418,8 @@ modelo/README.md
 ```
 
 No se generan scores artificiales para demostrar los escenarios.
+
+La procedencia completa está en [modelo/README.md](modelo/README.md), la configuración en [config/model.yaml](config/model.yaml) y los cambios respecto a P5 en [REUSE.md](REUSE.md).
 
 ---
 
@@ -780,6 +791,18 @@ evidencias/metricas/observaciones.csv
 ---
 
 # 20. Ejecución
+
+## Inferencia real disponible
+
+Desde la raíz del repositorio, con una imagen propia o la imagen de prueba utilizada en la validación:
+
+```powershell
+python scripts/test_inference.py --input "C:\Users\mafig\OneDrive - ITESO\Desktop\mlops\proyecto2\Equipo03-Proyecto05\Proyecto4\evidencias\EDGE-01\camara-nueva.jpg"
+```
+
+El JSON incluye `detections` con clase, confianza y caja, `confidence` máxima real (o `null` sin detecciones), `inference_time_ms` para la llamada al modelo y tiempos separados de lectura y procesamiento. También se puede usar `InferenceEngine.from_config("config/model.yaml").predict(frame)` con un frame BGR `uint8`. El script devuelve código distinto de cero ante cualquier fallo.
+
+Los comandos siguientes corresponden a etapas futuras del proyecto y todavía no se pueden ejecutar:
 
 ## Iniciar backend
 

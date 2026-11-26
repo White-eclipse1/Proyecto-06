@@ -1,4 +1,4 @@
-"""Recalcula G1–G6 desde SQLite sin cargar YOLOX."""
+"""Recalcula G1–G7 desde SQLite sin cargar YOLOX."""
 
 import argparse
 import json
@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT))
 from src.metrics.reporting import export_report, recalculate  # noqa: E402
 from src.monitoring import load_config  # noqa: E402
 from src.persistence import Database  # noqa: E402
+from src.persistence import AlertRepository  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -30,7 +31,10 @@ def main(argv: list[str] | None = None) -> int:
         )
         if args.export:
             paths = export_report(report, observations, ROOT / "evidencias" / "metricas")
-            report["exported_files"] = [str(path) for path in paths]
+            alerts_path = AlertRepository(Database(args.database)).export_alerts(
+                ROOT / "evidencias" / "alertas" / "alertas.json", source_id=source_id,
+            )
+            report["exported_files"] = [str(path) for path in (*paths, alerts_path)]
         print(json.dumps(report, ensure_ascii=False, allow_nan=False))
         return 0
     except Exception as error:

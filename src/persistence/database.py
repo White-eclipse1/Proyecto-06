@@ -107,3 +107,36 @@ class Database:
                 )
                 """
             )
+            connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS alerts (
+                    alert_id TEXT PRIMARY KEY,
+                    timestamp TEXT NOT NULL,
+                    rule_id TEXT NOT NULL,
+                    severity TEXT NOT NULL CHECK (severity IN ('INFO', 'WARNING', 'CRITICAL')),
+                    reason TEXT NOT NULL,
+                    suggested_action TEXT NOT NULL,
+                    status TEXT NOT NULL CHECK (status IN ('ACTIVE', 'RESOLVED')),
+                    source_id TEXT NOT NULL,
+                    config_version TEXT NOT NULL,
+                    event_id TEXT REFERENCES events(event_id),
+                    window_id TEXT,
+                    reference_id TEXT REFERENCES confidence_references(reference_id),
+                    resolved_at TEXT,
+                    CHECK ((event_id IS NOT NULL AND window_id IS NULL)
+                        OR (event_id IS NULL AND window_id IS NOT NULL))
+                )
+                """
+            )
+            connection.execute(
+                "CREATE UNIQUE INDEX IF NOT EXISTS uq_alert_event "
+                "ON alerts(rule_id, event_id) WHERE event_id IS NOT NULL"
+            )
+            connection.execute(
+                "CREATE UNIQUE INDEX IF NOT EXISTS uq_alert_window "
+                "ON alerts(rule_id, window_id) WHERE window_id IS NOT NULL"
+            )
+            connection.execute(
+                "CREATE INDEX IF NOT EXISTS idx_alert_source_status "
+                "ON alerts(source_id, status, timestamp)"
+            )

@@ -1,6 +1,6 @@
-# Métricas operativas G1–G6
+# Métricas operativas G1–G7
 
-Estas métricas describen la operación de P6 y el comportamiento de sus salidas. No miden calidad predictiva. El inventario versionado está en `config/metrics.yaml`: G1–G6 están implementadas y G7 figura como aplicable, pendiente del motor de alertas.
+Estas métricas describen la operación de P6 y el comportamiento de sus salidas. No miden calidad predictiva. El inventario versionado está en `config/metrics.yaml`: G1–G7 están implementadas.
 
 Cada fila de `metric_observations` conserva `observation_id`, timestamp UTC, `event_id` cuando corresponde, `source_id`, grupo, nombre, valor finito, unidad y `run_id`. `run_id` identifica una ejecución de `run_monitoring_sample.py`. Los eventos y sus detecciones permanecen en `events` y `detections`. `confidence_references` y `reference_events` guardan la referencia y los IDs exactos que la forman.
 
@@ -54,11 +54,19 @@ Los resultados comparten `value`, `unit`, `status`, `window_start`, `window_end`
 - **M4 Trazabilidad:** cada reporte tiene `event_id` y `source_id`; el resultado conserva `as_of` como `window_end` para repetir exactamente el cálculo.
 - **M5 Verificación:** repetir recálculo con el mismo `--as-of`; G6 debe coincidir. Si se omite, la edad crecerá con el tiempo.
 
+## G7 — Alertas activas
+
+- **M1 Definición:** cantidad de alertas `ACTIVE` de una fuente existentes hasta el instante `as_of`, unidad `count`. Población: alertas reales de la tabla `alerts` de esa fuente; la consulta usa todas las corridas. Cero alertas activas es un resultado válido: `value=0`, `status=OK`.
+- **M2 Adquisición:** `AlertRepository.list_active_alerts(source_id, as_of)` consulta SQLite con estado y timestamp. No se generan alertas para completar la métrica.
+- **M3 Cálculo:** `COUNT(alerts WHERE status = ACTIVE AND source_id = fuente AND timestamp <= as_of)`. La implementación actual crea alertas como `ACTIVE`; el cierre manual y el historial de resoluciones quedan para una fase posterior.
+- **M4 Trazabilidad:** cada alerta conserva `alert_id`, `rule_id`, `source_id`, timestamp, estado y `event_id` o `window_id`; una alerta de evento apunta a `events`, que apunta a su captura cuando se conservó.
+- **M5 Verificación:** ejecutar `scripts/recalculate_metrics.py` con `--source-id` y `--as-of`, y comparar G7 con el conteo de `alerts` filtrado por fuente, estado y timestamp. `--export` genera `evidencias/alertas/alertas.json` con filas reales.
+
 ## Referencia y ventanas de confianza
 
 La referencia es la media de las primeras hasta `window_size` observaciones puntuadas de una fuente y una identidad `(model_version, config_version, source_id)`. Se necesita al menos `minimum_observations`; si faltan, no se crea una referencia ficticia. Se guardan `reference_id`, hora de creación, identidad, cantidad, tamaño de ventana, media e IDs de los eventos usados. Es una referencia del **comportamiento de confidence**, nunca una estimación de accuracy.
 
-Los eventos posteriores puntuados se agrupan en ventanas consecutivas no superpuestas de hasta `window_size`, incluso si pertenecen a corridas distintas de la misma identidad. Una ventana con menos de `minimum_observations` devuelve `INSUFFICIENT_DATA`. Con la configuración actual, una caída relativa de media `>= 0.20` respecto a la referencia durante dos ventanas válidas consecutivas produce `SUSTAINED_CONFIDENCE_CHANGE`. La primera caída devuelve `OBSERVING_CHANGE`; una ventana sin caída devuelve `NORMAL` y reinicia el contador. Cambiar modelo, configuración o fuente impide usar la referencia anterior; al cambiar reglas o umbrales debe aumentarse `config.version`. No se generan alertas.
+Los eventos posteriores puntuados se agrupan en ventanas consecutivas no superpuestas de hasta `window_size`, incluso si pertenecen a corridas distintas de la misma identidad. Una ventana con menos de `minimum_observations` devuelve `INSUFFICIENT_DATA`. Con la configuración actual, una caída relativa de media `>= 0.20` respecto a la referencia durante dos ventanas válidas consecutivas produce `SUSTAINED_CONFIDENCE_CHANGE`. La primera caída devuelve `OBSERVING_CHANGE`; una ventana sin caída devuelve `NORMAL` y reinicia el contador. Cambiar modelo, configuración o fuente impide usar la referencia anterior; al cambiar reglas o umbrales debe aumentarse `config.version`. La regla de alerta asociada está desactivada por defecto.
 
 ## Recálculo y exportación
 

@@ -1,0 +1,43 @@
+{
+  "event_id": "82a603bd-6b84-4a8e-8edb-3c563f185f9e",
+  "timestamp": "2026-11-26T02:09:25.967918+00:00",
+  "source_id": "alert-demo",
+  "model_version": "0.1.1rc0",
+  "config_version": "monitoring-v1",
+  "state": "LOW_CONFIDENCE",
+  "confidence": 0.3968369795843003,
+  "confidence_zone": "LOW_CONFIDENCE",
+  "detections": [
+    {
+      "class_id": 72,
+      "class_name": "refrigerator",
+      "confidence": 0.3968369795843003,
+      "bbox": [
+        105.1325246909575,
+        0.0,
+        1864.559764221302,
+        1068.7201528149799
+      ]
+    },
+    {
+      "class_id": 27,
+      "class_name": "tie",
+      "confidence": 0.2407698662953166,
+      "bbox": [
+        884.012092567433,
+        32.20932769878912,
+        1121.0709709983346,
+        1071.2809515722633
+      ]
+    }
+  ],
+  "detection_count": 2,
+  "read_time_ms": 6.3850999576970935,
+  "preprocessing_time_ms": 2.483000047504902,
+  "inference_time_ms": 14.833199908025563,
+  "postprocessing_time_ms": 2.4238000623881817,
+  "image_reference": "../imagenes/82a603bd-6b84-4a8e-8edb-3c563f185f9e.jpg",
+  "error_detail": null,
+  "original_image_reference": "C:\\Users\\mafig\\OneDrive - ITESO\\Desktop\\mlops\\Proyecto-06\\data\\captures\\82a603bd-6b84-4a8e-8edb-3c563f185f9e.jpg",
+  "image_sha256": "09aad4e2427670b336b1acf3435931cd158e640a059a8f9d57ae52026671d5a3"
+}

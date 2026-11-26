@@ -6,9 +6,11 @@ __pycache__/
 .uv-cache/
 data/*.db
 data/*.db-*
+data/captures/
 modelo/*.onnx
 modelo/*.part
 evidencias/**/*.jpg
+!evidencias/imagenes/*.jpg
 evidencias/**/*.jpeg
 evidencias/**/*.png
 *.log

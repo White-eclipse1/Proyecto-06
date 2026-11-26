@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from statistics import mean
 
 from src.events.models import Event
+from src.alerts.models import Alert
 
 from .collector import is_traceable
 
@@ -14,7 +15,7 @@ from .models import MetricResult, MetricStatus
 def calculate_metrics(
     observations: list[Observation], events: list[Event],
     source_reports: list[Observation], *, source_id: str, run_id: str | None,
-    as_of: datetime,
+    as_of: datetime, active_alerts: list[Alert] | None = None,
 ) -> list[MetricResult]:
     if as_of.tzinfo is None or as_of.utcoffset() is None:
         raise ValueError("as_of debe tener zona horaria")
@@ -98,4 +99,17 @@ def calculate_metrics(
                           age if g6_status == MetricStatus.OK else None,
                           len(reports), g6_status,
                           latest.timestamp if latest else None, as_of.isoformat()))
+    if active_alerts is None:
+        results.append(MetricResult(
+            "G7", "active_alerts", None, "count", MetricStatus.INSUFFICIENT_DATA,
+            None, as_of.isoformat(), 0, 0, source_id, run_id,
+        ))
+    else:
+        if any(alert.source_id != source_id or alert.status != "ACTIVE" for alert in active_alerts):
+            raise ValueError("G7 recibió alertas de otra fuente o estado")
+        results.append(MetricResult(
+            "G7", "active_alerts", len(active_alerts), "count", MetricStatus.OK,
+            min((alert.timestamp for alert in active_alerts), default=None),
+            as_of.isoformat(), len(active_alerts), len(active_alerts), source_id, run_id,
+        ))
     return results

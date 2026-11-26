@@ -44,7 +44,7 @@ class MetricObservation:
 class MetricResult:
     metric_group: str
     metric_name: str
-    value: float | None
+    value: float | int | None
     unit: str
     status: MetricStatus
     window_start: str | None

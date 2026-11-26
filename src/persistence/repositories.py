@@ -2,6 +2,7 @@
 
 import sqlite3
 from contextlib import closing
+from pathlib import Path
 
 from src.events.models import Event
 from src.inference.types import Detection
@@ -101,6 +102,24 @@ class EventRepository:
         with closing(self.database.connect()) as connection:
             return self._get_with_connection(connection, event_id)
 
+    def set_image_reference(self, event_id: str, reference: str) -> Event:
+        if not Path(reference).is_file():
+            raise ValueError(f"image_reference no existe: {reference}")
+        with closing(self.database.connect()) as connection, connection:
+            current = connection.execute(
+                "SELECT image_reference FROM events WHERE event_id = ?", (event_id,)
+            ).fetchone()
+            if current is None:
+                raise ValueError(f"evento no encontrado: {event_id}")
+            if current["image_reference"] not in (None, reference):
+                raise ValueError("el evento ya tiene otra image_reference")
+            connection.execute(
+                "UPDATE events SET image_reference = ? WHERE event_id = ?", (reference, event_id)
+            )
+        updated = self.get_event(event_id)
+        assert updated is not None
+        return updated
+
     def list_events(self, limit: int = 20) -> list[Event]:
         if limit < 1:
             raise ValueError("limit debe ser mayor o igual a 1")
@@ -135,3 +154,20 @@ class EventRepository:
                 event for row in ids
                 if (event := self._get_with_connection(connection, row["event_id"])) is not None
             ]
+
+    def recent_scored_by_identity(
+        self, source_id: str, model_version: str, config_version: str, limit: int,
+    ) -> list[Event]:
+        if limit < 1:
+            raise ValueError("limit debe ser >= 1")
+        with closing(self.database.connect()) as connection:
+            ids = connection.execute(
+                """SELECT event_id FROM events WHERE source_id = ? AND model_version = ?
+                AND config_version = ? AND confidence IS NOT NULL
+                ORDER BY timestamp DESC, event_id DESC LIMIT ?""",
+                (source_id, model_version, config_version, limit),
+            ).fetchall()
+            return list(reversed([
+                event for row in ids
+                if (event := self._get_with_connection(connection, row["event_id"])) is not None
+            ]))

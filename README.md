@@ -7,7 +7,7 @@
 **Proyecto:** Proyecto 6  
 **Universidad:** ITESO  
 
-**Estado actual:** inferencia real de P5, eventos y detecciones en SQLite, observaciones primarias y métricas G1–G6 recalculables, referencia de confianza y ventanas de cambio sostenido implementadas y probadas. G7 sigue aplicable pero pendiente; alertas, portal, stream y escenarios C1/C2 finales no están implementados.
+**Estado actual:** inferencia real de P5, eventos y detecciones en SQLite, métricas G1–G7 recalculables, referencia de confianza, capturas selectivas y alertas persistentes implementadas y probadas. Portal, stream y escenarios C1/C2 finales siguen pendientes.
 
 ---
 
@@ -523,6 +523,8 @@ Los eventos pueden consultarse desde el portal.
 
 # 15. Política de conservación de imágenes
 
+La política versionada está en `config/capture.yaml`; el directorio por defecto es `data/captures/` y puede configurarse. Las imágenes se nombran con el UUID del evento y se guardan sin sobrescribir archivos existentes. `event.image_reference` apunta al archivo real y se verifica antes de persistir una alerta.
+
 No se conserva obligatoriamente cada frame.
 
 Las capturas se guardan principalmente cuando ocurre alguno de estos casos:
@@ -535,48 +537,15 @@ Las capturas se guardan principalmente cuando ocurre alguno de estos casos:
 
 Cada imagen se vincula con su evento mediante un identificador o referencia resoluble.
 
-Las capturas utilizadas como evidencia **no tienen expiración automática**.
+La muestra normal conserva cada vigésimo evento `ACCEPTED_BY_POLICY`, según `normal_sample_every`. Las capturas por evidencia de escenario se solicitan explícitamente. **No automatic expiration is configured**: las capturas no tienen TTL ni eliminación programada.
 
 ---
 
 # 16. Alertas
 
-Las alertas se generan utilizando reglas explícitas.
+La regla `LOW_CONFIDENCE_ALERT` está definida en `config/alerts.yaml`: una detección con score real y zona `LOW_CONFIDENCE` crea una alerta `ACTIVE` de severidad `WARNING`. La configuración declara `minimum_events=1` y `window_size=1`; si se eleva el mínimo y faltan observaciones, devuelve `INSUFFICIENT_DATA`. `NO_DETECTION` y `MODEL_ERROR` no activan esta regla. La regla opcional basada en `SUSTAINED_CONFIDENCE_CHANGE` está desactivada por defecto.
 
-Ejemplo:
-
-```text
-Regla:
-LOW_CONFIDENCE
-
-Condición:
-confidence < lower_threshold
-
-Datos mínimos:
-inferencias reales del modelo
-
-Severidad:
-WARNING
-
-Acción sugerida:
-Revisar la captura y las condiciones de la fuente visual.
-```
-
-Una alerta conserva al menos:
-
-```json
-{
-  "alert_id": "alert-001",
-  "timestamp": "2026-11-25T12:00:00Z",
-  "rule_id": "low-confidence",
-  "severity": "warning",
-  "reason": "Confidence below configured lower threshold",
-  "suggested_action": "Review capture and visual conditions",
-  "event_id": "evt-001"
-}
-```
-
-Las alertas se almacenan y pueden consultarse desde el portal.
+Cada alerta tiene UUID, timestamp UTC, regla, severidad (`INFO`, `WARNING` o `CRITICAL`), motivo, acción sugerida, estado (`ACTIVE` o `RESOLVED`), fuente, versión de configuración y referencia al evento o ventana. SQLite impide duplicados de la misma regla y evento. La inserción de la alerta y la actualización de `image_reference` comparten una transacción. Las alertas se consultan mediante `AlertRepository`; el portal aún está pendiente. La política y exportación están detalladas en [docs/alerts.md](docs/alerts.md).
 
 ---
 
@@ -620,7 +589,7 @@ Información mostrada:
 
 Para cada grupo aplicable se designa una métrica base.
 
-G1–G6 se calculan desde `metric_observations`, `events` y `detections` de SQLite. Las definiciones M1–M5, exclusiones y comandos de verificación están en [docs/metrics.md](docs/metrics.md). [config/metrics.yaml](config/metrics.yaml) conserva el inventario: G7 es aplicable y está pendiente del motor de alertas.
+G1–G6 se calculan desde `metric_observations`, `events` y `detections` de SQLite. G7 cuenta alertas `ACTIVE` desde `alerts`, con cero como valor válido. Las definiciones M1–M5 y comandos de verificación están en [docs/metrics.md](docs/metrics.md). [config/metrics.yaml](config/metrics.yaml) conserva el inventario G1–G7.
 
 Cada métrica incluye:
 
@@ -752,6 +721,8 @@ active_alerts =
 count(alert.status == ACTIVE)
 ```
 
+Si no hay alertas activas y SQLite se consultó correctamente, G7 devuelve `0` con estado `OK`.
+
 ---
 
 # 19. Recalcular métricas
@@ -768,6 +739,8 @@ python scripts/recalculate_metrics.py --source-id "local-image" --run-id "<run_i
 evidencias/metricas/resultados.json
 evidencias/metricas/observaciones.csv
 ```
+
+También exporta `evidencias/alertas/alertas.json` con alertas existentes. G7 se recalcula desde la tabla `alerts` sin ejecutar YOLOX.
 
 ---
 
@@ -797,7 +770,15 @@ La salida JSON presenta el evento leído de SQLite y `persisted=true` solo si co
 python scripts/run_monitoring_sample.py --input-dir "ruta\imagenes" --source-id "local-image" --export
 ```
 
-Se aceptan varias imágenes con `--input` repetido. El script genera eventos y observaciones primarias, calcula G1–G6 y devuelve la referencia y el estado de sus ventanas. `--export` guarda el CSV y JSON de evidencia desde la base real. G7 y las alertas siguen pendientes.
+Se aceptan varias imágenes con `--input` repetido. El script aplica capturas selectivas y reglas de alerta, genera observaciones primarias, calcula G1–G7 y devuelve la referencia y el estado de sus ventanas. `--export` guarda CSV y JSON de evidencia desde SQLite.
+
+## Capturas y alertas disponibles
+
+```powershell
+python scripts/test_alert_pipeline.py --input "C:\Users\mafig\OneDrive - ITESO\Desktop\mlops\proyecto2\Equipo03-Proyecto05\Proyecto4\evidencias\EDGE-01\camara-nueva.jpg" --source-id "alert-demo" --export
+```
+
+El JSON confirma evento, captura resoluble, alerta recuperada y G7. Una imagen que no cumpla la regla devuelve `alert_created=false` con código de salida `0`. `--export` copia una muestra vinculada a `evidencias/eventos/` y `evidencias/imagenes/`.
 
 Los comandos siguientes corresponden a etapas futuras del proyecto y todavía no se pueden ejecutar:
 

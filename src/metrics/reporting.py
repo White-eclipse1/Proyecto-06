@@ -7,6 +7,7 @@ from pathlib import Path
 
 from src.monitoring import assess_windows, load_config
 from src.persistence.database import Database
+from src.persistence.alert_repository import AlertRepository
 from src.persistence.metric_repository import MetricRepository
 from src.persistence.reference_repository import ReferenceRepository
 from src.persistence.repositories import EventRepository
@@ -26,8 +27,10 @@ def recalculate(
     events = repository.events_for_run(run_id) if run_id else []
     reports = repository.list_observations(source_id=source_id, metric_group="G6")
     as_of = as_of or datetime.now(timezone.utc)
+    active_alerts = AlertRepository(database).list_active_alerts(source_id=source_id, as_of=as_of)
     results = calculate_metrics(
         observations, events, reports, source_id=source_id, run_id=run_id, as_of=as_of,
+        active_alerts=active_alerts,
     )
     config = load_config(Path(__file__).resolve().parents[2] / "config" / "monitoring.yaml")
     compatible = bool(events) and events[0].config_version == config.version

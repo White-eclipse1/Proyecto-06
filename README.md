@@ -7,7 +7,7 @@
 **Proyecto:** Proyecto 6  
 **Universidad:** ITESO  
 
-**Estado actual:** base de inferencia real de P5 integrada y probada. Las secciones de monitoreo, métricas G1–G7, eventos, alertas, portal y escenarios C1/C2 describen el alcance futuro; aún no están implementadas ni validadas.
+**Estado actual:** inferencia real de P5, clasificación de confianza por frame y persistencia de eventos con detecciones en SQLite, implementadas y probadas. El análisis de ventanas, las métricas G1–G7 completas, alertas, portal, stream y escenarios C1/C2 siguen pendientes.
 
 ---
 
@@ -334,18 +334,13 @@ npm install
 
 # 9. Configuración
 
-La configuración del monitoreo se mantiene fuera del código.
+La configuración de esta fase está en `config/monitoring.yaml`. Los umbrales son configurables y se validan al cargar (`0 <= lower_threshold < upper_threshold <= 1`). `window_size` y `minimum_observations` quedan preparados para una fase posterior; todavía no se analiza el cambio sostenido.
 
-Ejemplo:
+Configuración inicial:
 
 ```yaml
-source:
-  type: camera
-  sampling_interval_ms: 500
-
-model:
-  version: "P6-model"
-  confidence_output_floor: 0.10
+config:
+  version: monitoring-v1
 
 confidence:
   lower_threshold: 0.60
@@ -355,10 +350,8 @@ monitoring:
   window_size: 20
   minimum_observations: 10
 
-alerts:
-  low_confidence:
-    enabled: true
-    severity: warning
+source:
+  default_id: local-image
 ```
 
 Los valores `0.60` y `0.80` son la configuración inicial propuesta.
@@ -461,9 +454,13 @@ MISSING_SCORE
 INSUFFICIENT_DATA
 ```
 
+La `confidence` a nivel de frame es la máxima entre las detecciones conservadas por el detector. Cada detección mantiene su score individual; solo se aplica el piso de salida `0.10` del detector, sin descartar detecciones por los umbrales de monitoreo. Un frame sin detecciones tiene `confidence=null` y `NO_DETECTION`, distinto de `LOW_CONFIDENCE`. `MODEL_ERROR` representa un fallo real del modelo sin score. `ACCEPTED_BY_POLICY` indica únicamente que se superó el umbral; no equivale a una predicción correcta. `INVALID_INPUT`, `MISSING_SCORE` e `INSUFFICIENT_DATA` siguen como estados previstos para fases posteriores.
+
 ---
 
 # 13. Referencia y cambio sostenido
+
+**Pendiente:** la configuración de ventana existe, pero esta fase no calcula referencias ni cambios sostenidos.
 
 El sistema mantiene una referencia de confianza obtenida de una ejecución identificada.
 
@@ -499,24 +496,7 @@ y no interpreta esa situación como operación normal.
 
 # 14. Eventos
 
-Cada observación relevante genera un evento persistente.
-
-Ejemplo conceptual:
-
-```json
-{
-  "event_id": "evt-001",
-  "timestamp": "2026-11-25T12:00:00Z",
-  "source_id": "camera-01",
-  "model_version": "model-v1",
-  "config_version": "config-v1",
-  "state": "LOW_CONFIDENCE",
-  "prediction": "person",
-  "confidence": 0.54,
-  "confidence_zone": "LOW_CONFIDENCE",
-  "image_reference": "data/captures/evt-001.jpg"
-}
-```
+Cada ejecución correcta puede generar un evento con UUID v4, timestamp ISO-8601 UTC, fuente, versiones del modelo y configuración, zona, confianza máxima, tiempos por etapa, referencia de imagen y todas las detecciones (`class_id`, `class_name`, `confidence`, `bbox`). Un fallo de inferencia puede representarse como `MODEL_ERROR`, sin score ni detecciones. El evento y sus detecciones se guardan en una transacción en las tablas `events` y `detections`; se recuperan con `EventRepository.get_event(event_id)` y se enumeran con `list_events(limit=...)`. `Database.initialize()` crea las tablas automáticamente en `data/monitoring.db` o en la ruta indicada. Esa base local está excluida de Git.
 
 Los eventos permiten relacionar:
 
@@ -801,6 +781,14 @@ python scripts/test_inference.py --input "C:\Users\mafig\OneDrive - ITESO\Deskto
 ```
 
 El JSON incluye `detections` con clase, confianza y caja, `confidence` máxima real (o `null` sin detecciones), `inference_time_ms` para la llamada al modelo y tiempos separados de lectura y procesamiento. También se puede usar `InferenceEngine.from_config("config/model.yaml").predict(frame)` con un frame BGR `uint8`. El script devuelve código distinto de cero ante cualquier fallo.
+
+## Evento y SQLite disponibles
+
+```powershell
+python scripts/test_event_pipeline.py --input "C:\Users\mafig\OneDrive - ITESO\Desktop\mlops\proyecto2\Equipo03-Proyecto05\Proyecto4\evidencias\EDGE-01\camara-nueva.jpg"
+```
+
+La salida JSON presenta el evento leído de SQLite y `persisted=true` solo si coincide con el generado. Puede usarse otra ruta con `--database` y otra fuente con `--source-id`. Para ejecutar las pruebas: `python -m pytest -q --basetemp=.pytest-tmp` tras instalar `requirements-dev.txt`.
 
 Los comandos siguientes corresponden a etapas futuras del proyecto y todavía no se pueden ejecutar:
 

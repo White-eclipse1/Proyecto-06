@@ -1,0 +1,116 @@
+"""Consultas SQLite de eventos con escritura atómica de sus detecciones."""
+
+import sqlite3
+from contextlib import closing
+
+from src.events.models import Event
+from src.inference.types import Detection
+
+from .database import Database
+
+
+class EventRepository:
+    def __init__(self, database: Database) -> None:
+        self.database = database
+
+    def save_event(self, event: Event) -> None:
+        with closing(self.database.connect()) as connection, connection:
+            connection.execute(
+                """
+                INSERT INTO events (
+                    event_id, timestamp, source_id, model_version, config_version,
+                    state, confidence, confidence_zone, detection_count, read_time_ms,
+                    preprocessing_time_ms, inference_time_ms, postprocessing_time_ms,
+                    image_reference, error_detail
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    event.event_id,
+                    event.timestamp,
+                    event.source_id,
+                    event.model_version,
+                    event.config_version,
+                    event.state,
+                    event.confidence,
+                    event.confidence_zone,
+                    event.detection_count,
+                    event.read_time_ms,
+                    event.preprocessing_time_ms,
+                    event.inference_time_ms,
+                    event.postprocessing_time_ms,
+                    event.image_reference,
+                    event.error_detail,
+                ),
+            )
+            connection.executemany(
+                """
+                INSERT INTO detections (
+                    event_id, class_id, class_name, confidence,
+                    bbox_x1, bbox_y1, bbox_x2, bbox_y2
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    (
+                        event.event_id,
+                        detection.class_id,
+                        detection.class_name,
+                        detection.confidence,
+                        *detection.bbox,
+                    )
+                    for detection in event.detections
+                ),
+            )
+
+    def _get_with_connection(self, connection: sqlite3.Connection, event_id: str) -> Event | None:
+        row = connection.execute("SELECT * FROM events WHERE event_id = ?", (event_id,)).fetchone()
+        if row is None:
+            return None
+        detection_rows = connection.execute(
+            "SELECT * FROM detections WHERE event_id = ? ORDER BY id", (event_id,)
+        ).fetchall()
+        if len(detection_rows) != row["detection_count"]:
+            raise ValueError(f"conteo de detecciones inconsistente para {event_id}")
+        detections = tuple(
+            Detection(
+                class_id=d["class_id"],
+                class_name=d["class_name"],
+                confidence=d["confidence"],
+                bbox=(d["bbox_x1"], d["bbox_y1"], d["bbox_x2"], d["bbox_y2"]),
+            )
+            for d in detection_rows
+        )
+        return Event(
+            event_id=row["event_id"],
+            timestamp=row["timestamp"],
+            source_id=row["source_id"],
+            model_version=row["model_version"],
+            config_version=row["config_version"],
+            state=row["state"],
+            confidence=row["confidence"],
+            confidence_zone=row["confidence_zone"],
+            detections=detections,
+            read_time_ms=row["read_time_ms"],
+            preprocessing_time_ms=row["preprocessing_time_ms"],
+            inference_time_ms=row["inference_time_ms"],
+            postprocessing_time_ms=row["postprocessing_time_ms"],
+            image_reference=row["image_reference"],
+            error_detail=row["error_detail"],
+        )
+
+    def get_event(self, event_id: str) -> Event | None:
+        with closing(self.database.connect()) as connection:
+            return self._get_with_connection(connection, event_id)
+
+    def list_events(self, limit: int = 20) -> list[Event]:
+        if limit < 1:
+            raise ValueError("limit debe ser mayor o igual a 1")
+        with closing(self.database.connect()) as connection:
+            ids = connection.execute(
+                "SELECT event_id FROM events ORDER BY timestamp DESC, event_id DESC LIMIT ?",
+                (limit,),
+            ).fetchall()
+            return [
+                event
+                for row in ids
+                if (event := self._get_with_connection(connection, row["event_id"])) is not None
+            ]

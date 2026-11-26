@@ -7,7 +7,7 @@
 **Proyecto:** Proyecto 6  
 **Universidad:** ITESO  
 
-**Estado actual:** inferencia real de P5, eventos y detecciones en SQLite, métricas G1–G7 recalculables, referencia de confianza, capturas selectivas y alertas persistentes implementadas y probadas. Portal, stream y escenarios C1/C2 finales siguen pendientes.
+**Estado actual:** inferencia real de P5, eventos y detecciones en SQLite, métricas G1–G7 recalculables, referencia de confianza, capturas selectivas, alertas persistentes y portal local de eventos y alertas implementados y probados. Stream y escenarios C1/C2 finales siguen pendientes.
 
 ---
 
@@ -202,8 +202,8 @@ La implementación propuesta utiliza:
 
 ### Portal
 
-- React
-- JavaScript / TypeScript
+- FastAPI
+- HTML y CSS servidos localmente
 
 ### Evidencia
 
@@ -285,7 +285,6 @@ Los nombres de archivos pueden variar durante la implementación, pero se conser
 ## Requisitos
 
 - Python 3.12 para las versiones fijadas del pipeline de inferencia
-- Node.js 18 o superior
 - Git
 
 Clonar el repositorio:
@@ -323,12 +322,7 @@ Obtener y verificar los pesos públicos del modelo:
 python scripts/get_model.py
 ```
 
-Para el portal:
-
-```bash
-cd src/portal
-npm install
-```
+El portal se instala con `requirements.txt`; no necesita Node.js.
 
 ---
 
@@ -545,7 +539,7 @@ La muestra normal conserva cada vigésimo evento `ACCEPTED_BY_POLICY`, según `n
 
 La regla `LOW_CONFIDENCE_ALERT` está definida en `config/alerts.yaml`: una detección con score real y zona `LOW_CONFIDENCE` crea una alerta `ACTIVE` de severidad `WARNING`. La configuración declara `minimum_events=1` y `window_size=1`; si se eleva el mínimo y faltan observaciones, devuelve `INSUFFICIENT_DATA`. `NO_DETECTION` y `MODEL_ERROR` no activan esta regla. La regla opcional basada en `SUSTAINED_CONFIDENCE_CHANGE` está desactivada por defecto.
 
-Cada alerta tiene UUID, timestamp UTC, regla, severidad (`INFO`, `WARNING` o `CRITICAL`), motivo, acción sugerida, estado (`ACTIVE` o `RESOLVED`), fuente, versión de configuración y referencia al evento o ventana. SQLite impide duplicados de la misma regla y evento. La inserción de la alerta y la actualización de `image_reference` comparten una transacción. Las alertas se consultan mediante `AlertRepository`; el portal aún está pendiente. La política y exportación están detalladas en [docs/alerts.md](docs/alerts.md).
+Cada alerta tiene UUID, timestamp UTC, regla, severidad (`INFO`, `WARNING` o `CRITICAL`), motivo, acción sugerida, estado (`ACTIVE` o `RESOLVED`), fuente, versión de configuración y referencia al evento o ventana. SQLite impide duplicados de la misma regla y evento. La inserción de la alerta y la actualización de `image_reference` comparten una transacción. Las alertas se consultan mediante `AlertRepository` y el portal local. La política y exportación están detalladas en [docs/alerts.md](docs/alerts.md).
 
 ---
 
@@ -751,7 +745,7 @@ También exporta `evidencias/alertas/alertas.json` con alertas existentes. G7 se
 Desde la raíz del repositorio, con una imagen propia o la imagen de prueba utilizada en la validación:
 
 ```powershell
-python scripts/test_inference.py --input "C:\Users\mafig\OneDrive - ITESO\Desktop\mlops\proyecto2\Equipo03-Proyecto05\Proyecto4\evidencias\EDGE-01\camara-nueva.jpg"
+python scripts/test_inference.py --input "ruta\imagen.jpg"
 ```
 
 El JSON incluye `detections` con clase, confianza y caja, `confidence` máxima real (o `null` sin detecciones), `inference_time_ms` para la llamada al modelo y tiempos separados de lectura y procesamiento. También se puede usar `InferenceEngine.from_config("config/model.yaml").predict(frame)` con un frame BGR `uint8`. El script devuelve código distinto de cero ante cualquier fallo.
@@ -759,7 +753,7 @@ El JSON incluye `detections` con clase, confianza y caja, `confidence` máxima r
 ## Evento y SQLite disponibles
 
 ```powershell
-python scripts/test_event_pipeline.py --input "C:\Users\mafig\OneDrive - ITESO\Desktop\mlops\proyecto2\Equipo03-Proyecto05\Proyecto4\evidencias\EDGE-01\camara-nueva.jpg"
+python scripts/test_event_pipeline.py --input "ruta\imagen.jpg"
 ```
 
 La salida JSON presenta el evento leído de SQLite y `persisted=true` solo si coincide con el generado. Puede usarse otra ruta con `--database` y otra fuente con `--source-id`. Para ejecutar las pruebas: `python -m pytest -q --basetemp=.pytest-tmp` tras instalar `requirements-dev.txt`.
@@ -775,25 +769,20 @@ Se aceptan varias imágenes con `--input` repetido. El script aplica capturas se
 ## Capturas y alertas disponibles
 
 ```powershell
-python scripts/test_alert_pipeline.py --input "C:\Users\mafig\OneDrive - ITESO\Desktop\mlops\proyecto2\Equipo03-Proyecto05\Proyecto4\evidencias\EDGE-01\camara-nueva.jpg" --source-id "alert-demo" --export
+python scripts/test_alert_pipeline.py --input "ruta\imagen.jpg" --source-id "alert-demo" --export
 ```
 
 El JSON confirma evento, captura resoluble, alerta recuperada y G7. Una imagen que no cumpla la regla devuelve `alert_created=false` con código de salida `0`. `--export` copia una muestra vinculada a `evidencias/eventos/` y `evidencias/imagenes/`.
 
-Los comandos siguientes corresponden a etapas futuras del proyecto y todavía no se pueden ejecutar:
+## Iniciar portal local
 
-## Iniciar backend
-
-```bash
-uvicorn src.main:app --reload
+```powershell
+python scripts/run_portal.py
 ```
 
-## Iniciar portal
+Abrir `http://127.0.0.1:8000/events` para eventos y `http://127.0.0.1:8000/alerts` para alertas. Las páginas de detalle enlazan alerta → evento → captura cuando existe. La API de solo lectura ofrece `GET /api/events`, `GET /api/events/{event_id}`, `GET /api/alerts` y `GET /api/alerts/{alert_id}`; las listas aceptan `limit` y `offset`. `--database` y `--captures-dir` permiten elegir una base y capturas locales distintas. El portal no ejecuta inferencia ni escribe registros; requiere una base SQLite ya generada.
 
-```bash
-cd src/portal
-npm run dev
-```
+El comando siguiente corresponde a una etapa futura del proyecto:
 
 ## Ejecutar pipeline de monitoreo
 

@@ -93,6 +93,19 @@ class AlertRepository:
         with closing(self.database.connect()) as connection:
             return [_from_row(row) for row in connection.execute(query, params)]
 
+    def list_alerts_page(self, limit: int = 20, offset: int = 0) -> tuple[list[Alert], int]:
+        if limit < 1 or offset < 0:
+            raise ValueError("limit debe ser >= 1 y offset >= 0")
+        with closing(self.database.connect()) as connection:
+            count = connection.execute("SELECT COUNT(*) FROM alerts").fetchone()[0]
+            items = [
+                _from_row(row) for row in connection.execute(
+                    "SELECT * FROM alerts ORDER BY timestamp DESC, alert_id DESC LIMIT ? OFFSET ?",
+                    (limit, offset),
+                )
+            ]
+        return items, count
+
     def list_active_alerts(
         self, *, source_id: str | None = None, as_of: datetime | None = None,
     ) -> list[Alert]:

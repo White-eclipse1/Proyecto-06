@@ -134,6 +134,21 @@ class EventRepository:
                 if (event := self._get_with_connection(connection, row["event_id"])) is not None
             ]
 
+    def list_events_page(self, limit: int = 20, offset: int = 0) -> tuple[list[Event], int]:
+        if limit < 1 or offset < 0:
+            raise ValueError("limit debe ser >= 1 y offset >= 0")
+        with closing(self.database.connect()) as connection:
+            count = connection.execute("SELECT COUNT(*) FROM events").fetchone()[0]
+            ids = connection.execute(
+                "SELECT event_id FROM events ORDER BY timestamp DESC, event_id DESC LIMIT ? OFFSET ?",
+                (limit, offset),
+            ).fetchall()
+            items = [
+                event for row in ids
+                if (event := self._get_with_connection(connection, row["event_id"])) is not None
+            ]
+        return items, count
+
     def list_by_identity(
         self, source_id: str, model_version: str, config_version: str,
         *, after: tuple[str, str] | None = None,

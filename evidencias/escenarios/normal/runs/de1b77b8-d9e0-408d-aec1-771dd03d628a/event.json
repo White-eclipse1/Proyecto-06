@@ -1,0 +1,52 @@
+{
+  "event_id": "b5a2140c-8609-4b94-a6c4-78b27c0d20f4",
+  "timestamp": "2026-11-26T05:25:29.320488+00:00",
+  "source_id": "scenario-c1-45d66ba6-228c-481f-b296-e464566d0986",
+  "model_version": "0.1.1rc0",
+  "config_version": "monitoring-v1",
+  "state": "ACCEPTED_BY_POLICY",
+  "confidence": 0.8417058511793911,
+  "confidence_zone": "ACCEPTED_BY_POLICY",
+  "detections": [
+    {
+      "class_id": 0,
+      "class_name": "person",
+      "confidence": 0.8417058511793911,
+      "bbox": [
+        220.3282530019939,
+        66.05596924232928,
+        283.94801529681547,
+        203.350048648014
+      ]
+    },
+    {
+      "class_id": 24,
+      "class_name": "backpack",
+      "confidence": 0.29074179876634787,
+      "bbox": [
+        246.02764275034815,
+        90.01948781223906,
+        276.6488939197498,
+        131.89566004249258
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "person",
+      "confidence": 0.1810876666496739,
+      "bbox": [
+        269.6140287776497,
+        81.55392240535319,
+        286.77275287817537,
+        143.15275946972895
+      ]
+    }
+  ],
+  "detection_count": 3,
+  "read_time_ms": 1.6871000407263637,
+  "preprocessing_time_ms": 13.76720005646348,
+  "inference_time_ms": 32.13700000196695,
+  "postprocessing_time_ms": 6.072600022889674,
+  "image_reference": null,
+  "error_detail": null
+}

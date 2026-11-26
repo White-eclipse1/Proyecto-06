@@ -1,0 +1,18 @@
+config:
+  version: monitoring-v1
+
+confidence:
+  lower_threshold: 0.60
+  upper_threshold: 0.80
+
+monitoring:
+  window_size: 20
+  minimum_observations: 10
+
+source:
+  default_id: local-image
+
+sustained_change:
+  enabled: true
+  relative_drop: 0.20
+  consecutive_windows: 2

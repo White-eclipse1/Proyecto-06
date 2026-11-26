@@ -1,0 +1,40 @@
+{
+  "event_id": "36e70cb2-1b45-433c-9007-a516b8ead519",
+  "timestamp": "2026-11-26T05:27:50.281164+00:00",
+  "source_id": "scenario-c2-d865723c-27cb-43ba-a10d-75057e8d432e",
+  "model_version": "0.1.1rc0",
+  "config_version": "monitoring-v1",
+  "state": "LOW_CONFIDENCE",
+  "confidence": 0.3968369795843003,
+  "confidence_zone": "LOW_CONFIDENCE",
+  "detections": [
+    {
+      "class_id": 72,
+      "class_name": "refrigerator",
+      "confidence": 0.3968369795843003,
+      "bbox": [
+        105.1325246909575,
+        0.0,
+        1864.559764221302,
+        1068.7201528149799
+      ]
+    },
+    {
+      "class_id": 27,
+      "class_name": "tie",
+      "confidence": 0.2407698662953166,
+      "bbox": [
+        884.012092567433,
+        32.20932769878912,
+        1121.0709709983346,
+        1071.2809515722633
+      ]
+    }
+  ],
+  "detection_count": 2,
+  "read_time_ms": 8.419400081038475,
+  "preprocessing_time_ms": 3.588200081139803,
+  "inference_time_ms": 39.23729993402958,
+  "postprocessing_time_ms": 5.319299991242588,
+  "image_reference": "/captures/36e70cb2-1b45-433c-9007-a516b8ead519.jpg"
+}

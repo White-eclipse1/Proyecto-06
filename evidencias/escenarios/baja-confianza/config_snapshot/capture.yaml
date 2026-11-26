@@ -1,0 +1,8 @@
+config:
+  version: capture-v1
+  directory: data/captures
+
+capture:
+  low_confidence: true
+  normal_sample_every: 20
+  scenario_evidence: true

@@ -1,0 +1,88 @@
+{
+  "schema_version": "scenario-evidence-v1",
+  "scenario": "normal",
+  "run_id": "b8e4c4cc-cb62-40be-92dc-936c40c16e23",
+  "event_id": "0363508f-bdac-4460-b59b-1c79c68cafd4",
+  "alert_id": null,
+  "source_id": "scenario-c1-3590f7b9-9846-4711-bd10-fa141c2021af",
+  "generated_at": "2026-11-26T05:27:43.804429+00:00",
+  "input": "input/seq02-0001.jpg",
+  "input_sha256": "de5d68269a9d172fcb7a02514ed6a8363221326bd6eb2ff435f11fa9c64e1e14",
+  "source_provenance": "Proyecto5/data/p5-eval-v1/secuencias/seq02/seq02-0001.jpg",
+  "identity": {
+    "model_name": "YOLOX-Tiny",
+    "model_version": "0.1.1rc0",
+    "model_sha256": "427cc366d34e27ff7a03e2899b5e3671425c262ea2291f88bb942bc1cc70b0f7",
+    "model_file": "modelo/yolox_tiny.onnx",
+    "config_version": "monitoring-v1",
+    "lower_threshold": 0.6,
+    "upper_threshold": 0.8,
+    "alerts_config_version": "alerts-v1",
+    "capture_config_version": "capture-v1",
+    "alert_rules": {
+      "low_confidence": {
+        "enabled": true,
+        "minimum_events": 1,
+        "window_size": 1,
+        "severity": "WARNING",
+        "reason": "Low confidence from a scored model detection.",
+        "suggested_action": "Review the captured image and visual conditions."
+      },
+      "sustained_confidence_change": {
+        "enabled": false,
+        "severity": "WARNING",
+        "reason": "Sustained confidence decrease relative to the saved reference.",
+        "suggested_action": "Review the source and recent confidence windows."
+      }
+    },
+    "capture_policy": {
+      "directory": "data/captures",
+      "low_confidence": true,
+      "normal_sample_every": 20,
+      "scenario_evidence": true
+    },
+    "config_sha256": {
+      "model.yaml": "418a58aefba11ffcd4eda8dfca02448e2fd5d742e5eec11d680a1c9b7f678020",
+      "monitoring.yaml": "79650ac8310bbf233d34d9f60fa7d89dc96fb9273bce9de20120493c73e21b5a",
+      "metrics.yaml": "15273d51ed3101cf78b914ff9fe0d114596f7c092ecb809c1957f92879b15cb8",
+      "capture.yaml": "d58a13523c15aea9f6fb4ee905387c7ce13a2bd072d986f14c7a39b24d60200d",
+      "alerts.yaml": "5f52e9684f6275d509c0c160f1f7d187a048484262c2fff1771c1976c6cefb4c"
+    }
+  },
+  "git": {
+    "commit": "067787ccf983cd2a013862f134589876dd0bf5ed",
+    "branch": "main",
+    "status_porcelain_before": [
+      "M .gitignore",
+      "?? evidencias/escenarios/baja-confianza/README.md",
+      "?? evidencias/escenarios/baja-confianza/alert.json",
+      "?? evidencias/escenarios/baja-confianza/capturas/",
+      "?? evidencias/escenarios/baja-confianza/config_snapshot/",
+      "?? evidencias/escenarios/baja-confianza/event.json",
+      "?? evidencias/escenarios/baja-confianza/input/",
+      "?? evidencias/escenarios/baja-confianza/manifest.json",
+      "?? evidencias/escenarios/baja-confianza/metrics.json",
+      "?? evidencias/escenarios/baja-confianza/portal_alert.json",
+      "?? evidencias/escenarios/baja-confianza/portal_event.json",
+      "?? evidencias/escenarios/baja-confianza/result.json",
+      "?? evidencias/escenarios/baja-confianza/runs/",
+      "?? evidencias/escenarios/manifest.json",
+      "?? evidencias/escenarios/normal/README.md",
+      "?? evidencias/escenarios/normal/config_snapshot/",
+      "?? evidencias/escenarios/normal/event.json",
+      "?? evidencias/escenarios/normal/input/",
+      "?? evidencias/escenarios/normal/manifest.json",
+      "?? evidencias/escenarios/normal/metrics.json",
+      "?? evidencias/escenarios/normal/portal_alerts.json",
+      "?? evidencias/escenarios/normal/portal_event.json",
+      "?? evidencias/escenarios/normal/result.json",
+      "?? evidencias/escenarios/normal/runs/",
+      "?? evidencias/portal/CAPTURAS-PENDIENTES.md",
+      "?? scripts/run_scenario.py",
+      "?? tests/test_scenarios.py"
+    ],
+    "clean": false
+  },
+  "capture": null,
+  "capture_sha256": null
+}

@@ -1,0 +1,17 @@
+{
+  "alert_id": "bcedf448-91d1-484b-aec6-f2e0636e04d2",
+  "timestamp": "2026-11-26T05:27:50.300891+00:00",
+  "rule_id": "LOW_CONFIDENCE_ALERT",
+  "severity": "WARNING",
+  "reason": "Low confidence from a scored model detection.",
+  "suggested_action": "Review the captured image and visual conditions.",
+  "status": "ACTIVE",
+  "source_id": "scenario-c2-d865723c-27cb-43ba-a10d-75057e8d432e",
+  "config_version": "alerts-v1",
+  "event_id": "36e70cb2-1b45-433c-9007-a516b8ead519",
+  "window_id": null,
+  "reference_id": null,
+  "resolved_at": null,
+  "event_url": "/events/36e70cb2-1b45-433c-9007-a516b8ead519",
+  "image_url": "/captures/36e70cb2-1b45-433c-9007-a516b8ead519.jpg"
+}

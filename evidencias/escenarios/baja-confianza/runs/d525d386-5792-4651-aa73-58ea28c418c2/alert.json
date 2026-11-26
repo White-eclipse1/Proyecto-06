@@ -1,0 +1,15 @@
+{
+  "alert_id": "677730e5-8870-4b51-8c60-19d284ebf29e",
+  "timestamp": "2026-11-26T05:25:36.567033+00:00",
+  "rule_id": "LOW_CONFIDENCE_ALERT",
+  "severity": "WARNING",
+  "reason": "Low confidence from a scored model detection.",
+  "suggested_action": "Review the captured image and visual conditions.",
+  "status": "ACTIVE",
+  "source_id": "scenario-c2-ece75df9-216c-4883-8a9e-072d75ea8019",
+  "config_version": "alerts-v1",
+  "event_id": "54b835ae-e4d6-4558-bd35-a2094517d7d1",
+  "window_id": null,
+  "reference_id": null,
+  "resolved_at": null
+}

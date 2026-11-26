@@ -1,0 +1,49 @@
+{
+  "schema_version": "scenario-evidence-v1",
+  "scenario": "low-confidence",
+  "run_id": "d525d386-5792-4651-aa73-58ea28c418c2",
+  "event_id": "54b835ae-e4d6-4558-bd35-a2094517d7d1",
+  "alert_id": "677730e5-8870-4b51-8c60-19d284ebf29e",
+  "source_id": "scenario-c2-ece75df9-216c-4883-8a9e-072d75ea8019",
+  "generated_at": "2026-11-26T05:25:36.787381+00:00",
+  "input": "input/camara-nueva.jpg",
+  "input_sha256": "605479b4a5e4f8d28efee22f8933c5576328b7162869c4222b1cb751a289b21a",
+  "source_provenance": "Proyecto4/evidencias/EDGE-01/camara-nueva.jpg",
+  "identity": {
+    "model_version": "0.1.1rc0",
+    "model_sha256": "427cc366d34e27ff7a03e2899b5e3671425c262ea2291f88bb942bc1cc70b0f7",
+    "model_file": "modelo/yolox_tiny.onnx",
+    "config_version": "monitoring-v1",
+    "lower_threshold": 0.6,
+    "upper_threshold": 0.8,
+    "alerts_config_version": "alerts-v1",
+    "capture_config_version": "capture-v1",
+    "config_sha256": {
+      "model.yaml": "418a58aefba11ffcd4eda8dfca02448e2fd5d742e5eec11d680a1c9b7f678020",
+      "monitoring.yaml": "79650ac8310bbf233d34d9f60fa7d89dc96fb9273bce9de20120493c73e21b5a",
+      "metrics.yaml": "15273d51ed3101cf78b914ff9fe0d114596f7c092ecb809c1957f92879b15cb8",
+      "capture.yaml": "d58a13523c15aea9f6fb4ee905387c7ce13a2bd072d986f14c7a39b24d60200d",
+      "alerts.yaml": "5f52e9684f6275d509c0c160f1f7d187a048484262c2fff1771c1976c6cefb4c"
+    }
+  },
+  "git": {
+    "commit": "067787ccf983cd2a013862f134589876dd0bf5ed",
+    "branch": "main",
+    "status_porcelain_before": [
+      "?? evidencias/escenarios/manifest.json",
+      "?? evidencias/escenarios/normal/README.md",
+      "?? evidencias/escenarios/normal/config_snapshot/",
+      "?? evidencias/escenarios/normal/event.json",
+      "?? evidencias/escenarios/normal/manifest.json",
+      "?? evidencias/escenarios/normal/metrics.json",
+      "?? evidencias/escenarios/normal/portal_alerts.json",
+      "?? evidencias/escenarios/normal/portal_event.json",
+      "?? evidencias/escenarios/normal/result.json",
+      "?? evidencias/escenarios/normal/runs/",
+      "?? scripts/run_scenario.py"
+    ],
+    "clean": false
+  },
+  "capture": "capturas/54b835ae-e4d6-4558-bd35-a2094517d7d1.jpg",
+  "capture_sha256": "09aad4e2427670b336b1acf3435931cd158e640a059a8f9d57ae52026671d5a3"
+}

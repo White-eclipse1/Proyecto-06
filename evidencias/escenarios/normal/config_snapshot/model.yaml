@@ -1,0 +1,26 @@
+model:
+  name: YOLOX-Tiny
+  version: 0.1.1rc0
+  task: object_detection
+  path: modelo/yolox_tiny.onnx
+  runtime: onnxruntime==1.31.1
+  provider: CPUExecutionProvider
+  classes: COCO-80
+  classes_file: src/inference/coco_classes.py
+  input_size: [416, 416]
+  preprocessing:
+    image_format: BGR
+    median_kernel: 3
+    resize: letterbox_linear
+    padding: bottom_and_right
+    padding_value: 114
+    layout: CHW
+    dtype: float32
+    pixel_range: [0, 255]
+  postprocessing:
+    score: objectness_times_class_probability
+    score_threshold: 0.10
+    nms_threshold: 0.45
+    nms_class_agnostic: true
+  expected_size_bytes: 20219662
+  expected_sha256: 427cc366d34e27ff7a03e2899b5e3671425c262ea2291f88bb942bc1cc70b0f7

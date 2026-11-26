@@ -11,6 +11,8 @@ modelo/*.onnx
 modelo/*.part
 evidencias/**/*.jpg
 !evidencias/imagenes/*.jpg
+!evidencias/escenarios/**/input/*.jpg
+!evidencias/escenarios/**/capturas/*.jpg
 evidencias/**/*.jpeg
 evidencias/**/*.png
 *.log

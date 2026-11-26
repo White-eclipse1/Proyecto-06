@@ -1,0 +1,16 @@
+config:
+  version: alerts-v1
+
+alerts:
+  low_confidence:
+    enabled: true
+    minimum_events: 1
+    window_size: 1
+    severity: WARNING
+    reason: Low confidence from a scored model detection.
+    suggested_action: Review the captured image and visual conditions.
+  sustained_confidence_change:
+    enabled: false
+    severity: WARNING
+    reason: Sustained confidence decrease relative to the saved reference.
+    suggested_action: Review the source and recent confidence windows.

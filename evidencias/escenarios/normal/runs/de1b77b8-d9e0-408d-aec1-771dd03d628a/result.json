@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "scenario": "normal",
+  "run_id": "de1b77b8-d9e0-408d-aec1-771dd03d628a",
+  "event_id": "b5a2140c-8609-4b94-a6c4-78b27c0d20f4",
+  "alert_id": null,
+  "confidence": 0.8417058511793911,
+  "confidence_zone": "ACCEPTED_BY_POLICY",
+  "detection_count": 3,
+  "alert_count": 0,
+  "capture": null,
+  "metric_statuses": {
+    "G1": "OK",
+    "G2": "INSUFFICIENT_DATA",
+    "G3": "OK",
+    "G4": "OK",
+    "G5": "OK",
+    "G6": "OK",
+    "G7": "OK"
+  }
+}

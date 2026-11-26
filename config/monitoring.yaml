@@ -11,3 +11,8 @@ monitoring:
 
 source:
   default_id: local-image
+
+sustained_change:
+  enabled: true
+  relative_drop: 0.20
+  consecutive_windows: 2

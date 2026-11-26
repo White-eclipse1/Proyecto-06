@@ -7,7 +7,7 @@
 **Proyecto:** Proyecto 6  
 **Universidad:** ITESO  
 
-**Estado actual:** inferencia real de P5, clasificación de confianza por frame y persistencia de eventos con detecciones en SQLite, implementadas y probadas. El análisis de ventanas, las métricas G1–G7 completas, alertas, portal, stream y escenarios C1/C2 siguen pendientes.
+**Estado actual:** inferencia real de P5, eventos y detecciones en SQLite, observaciones primarias y métricas G1–G6 recalculables, referencia de confianza y ventanas de cambio sostenido implementadas y probadas. G7 sigue aplicable pero pendiente; alertas, portal, stream y escenarios C1/C2 finales no están implementados.
 
 ---
 
@@ -334,7 +334,7 @@ npm install
 
 # 9. Configuración
 
-La configuración de esta fase está en `config/monitoring.yaml`. Los umbrales son configurables y se validan al cargar (`0 <= lower_threshold < upper_threshold <= 1`). `window_size` y `minimum_observations` quedan preparados para una fase posterior; todavía no se analiza el cambio sostenido.
+La configuración de esta fase está en `config/monitoring.yaml`. Los umbrales son configurables y se validan al cargar (`0 <= lower_threshold < upper_threshold <= 1`). Las ventanas y la regla de cambio sostenido también se configuran allí.
 
 Configuración inicial:
 
@@ -352,6 +352,11 @@ monitoring:
 
 source:
   default_id: local-image
+
+sustained_change:
+  enabled: true
+  relative_drop: 0.20
+  consecutive_windows: 2
 ```
 
 Los valores `0.60` y `0.80` son la configuración inicial propuesta.
@@ -460,23 +465,25 @@ La `confidence` a nivel de frame es la máxima entre las detecciones conservadas
 
 # 13. Referencia y cambio sostenido
 
-**Pendiente:** la configuración de ventana existe, pero esta fase no calcula referencias ni cambios sostenidos.
+La referencia y la regla de ventanas están implementadas. La referencia se construye solo si existen al menos `minimum_observations` resultados puntuados reales de la misma fuente, versión de modelo y versión de configuración. Usa la media de hasta `window_size` confidences y guarda los IDs de los eventos de la muestra en SQLite. Describe comportamiento de confidence, no accuracy.
 
 El sistema mantiene una referencia de confianza obtenida de una ejecución identificada.
 
 La referencia conserva:
 
 ```text
+reference_id
 model_version
-configuration_version
-source
-window
+config_version
+source_id
+window_size
 sample_count
-confidence observations
-timestamp
+mean_confidence
+event_ids
+created_at
 ```
 
-La monitorización utiliza ventanas de observaciones para identificar cambios sostenidos.
+La monitorización utiliza ventanas no superpuestas de resultados puntuados. Una caída relativa de al menos 20% en dos ventanas válidas consecutivas produce `SUSTAINED_CONFIDENCE_CHANGE`. Una sola caída produce `OBSERVING_CHANGE`; una ventana sin caída produce `NORMAL`. No se genera una alerta.
 
 La regla final utilizada se encuentra versionada en:
 
@@ -613,6 +620,8 @@ Información mostrada:
 
 Para cada grupo aplicable se designa una métrica base.
 
+G1–G6 se calculan desde `metric_observations`, `events` y `detections` de SQLite. Las definiciones M1–M5, exclusiones y comandos de verificación están en [docs/metrics.md](docs/metrics.md). [config/metrics.yaml](config/metrics.yaml) conserva el inventario: G7 es aplicable y está pendiente del motor de alertas.
+
 Cada métrica incluye:
 
 - definición;
@@ -720,7 +729,7 @@ complete_traceable_events / eligible_events
 Mide la antigüedad del evento más reciente producido por la fuente.
 
 ```text
-last_report_age =
+last_report_age_seconds =
 current_time - latest_event_timestamp
 ```
 
@@ -747,21 +756,13 @@ count(alert.status == ACTIVE)
 
 # 19. Recalcular métricas
 
-Las observaciones primarias se conservan en:
+Las observaciones primarias se conservan en `metric_observations` de SQLite, vinculadas con `event_id`, `source_id` y `run_id`. El siguiente comando recalcula sin ejecutar YOLOX:
 
-```text
-evidencias/metricas/
+```powershell
+python scripts/recalculate_metrics.py --source-id "local-image" --run-id "<run_id>" --as-of "<ISO-8601-UTC>" --export
 ```
 
-Para recalcular una muestra:
-
-```bash
-python scripts/recalculate_metrics.py
-```
-
-El script genera resultados reproducibles a partir de los datos almacenados.
-
-Los resultados finales se almacenan en formato estructurado, por ejemplo:
+`--as-of` fija el instante de G6 para repetir el resultado; sin él, la edad del último reporte cambia con el tiempo. Con datos insuficientes se devuelve `value=null` y `INSUFFICIENT_DATA`. `--export` escribe datos reales de SQLite en:
 
 ```text
 evidencias/metricas/resultados.json
@@ -789,6 +790,14 @@ python scripts/test_event_pipeline.py --input "C:\Users\mafig\OneDrive - ITESO\D
 ```
 
 La salida JSON presenta el evento leído de SQLite y `persisted=true` solo si coincide con el generado. Puede usarse otra ruta con `--database` y otra fuente con `--source-id`. Para ejecutar las pruebas: `python -m pytest -q --basetemp=.pytest-tmp` tras instalar `requirements-dev.txt`.
+
+## Muestra real de monitoreo disponible
+
+```powershell
+python scripts/run_monitoring_sample.py --input-dir "ruta\imagenes" --source-id "local-image" --export
+```
+
+Se aceptan varias imágenes con `--input` repetido. El script genera eventos y observaciones primarias, calcula G1–G6 y devuelve la referencia y el estado de sus ventanas. `--export` guarda el CSV y JSON de evidencia desde la base real. G7 y las alertas siguen pendientes.
 
 Los comandos siguientes corresponden a etapas futuras del proyecto y todavía no se pueden ejecutar:
 

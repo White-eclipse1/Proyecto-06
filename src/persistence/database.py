@@ -61,3 +61,49 @@ class Database:
             connection.execute(
                 "CREATE INDEX IF NOT EXISTS idx_events_timestamp ON events(timestamp DESC)"
             )
+            connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS metric_observations (
+                    observation_id TEXT PRIMARY KEY,
+                    timestamp TEXT NOT NULL,
+                    event_id TEXT REFERENCES events(event_id) ON DELETE CASCADE,
+                    source_id TEXT NOT NULL,
+                    metric_group TEXT NOT NULL,
+                    metric_name TEXT NOT NULL,
+                    value REAL NOT NULL,
+                    unit TEXT NOT NULL,
+                    run_id TEXT NOT NULL
+                )
+                """
+            )
+            connection.execute(
+                "CREATE INDEX IF NOT EXISTS idx_metric_run ON metric_observations(run_id, metric_group)"
+            )
+            connection.execute(
+                "CREATE INDEX IF NOT EXISTS idx_metric_source ON metric_observations(source_id, metric_group)"
+            )
+            connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS confidence_references (
+                    reference_id TEXT PRIMARY KEY,
+                    created_at TEXT NOT NULL,
+                    model_version TEXT NOT NULL,
+                    config_version TEXT NOT NULL,
+                    source_id TEXT NOT NULL,
+                    sample_count INTEGER NOT NULL,
+                    window_size INTEGER NOT NULL,
+                    mean_confidence REAL NOT NULL
+                )
+                """
+            )
+            connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS reference_events (
+                    reference_id TEXT NOT NULL REFERENCES confidence_references(reference_id) ON DELETE CASCADE,
+                    event_id TEXT NOT NULL REFERENCES events(event_id),
+                    position INTEGER NOT NULL,
+                    PRIMARY KEY (reference_id, event_id),
+                    UNIQUE (reference_id, position)
+                )
+                """
+            )

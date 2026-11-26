@@ -1,5 +1,6 @@
-# Dependencias directas del pipeline de inferencia de P5, fijadas como en Proyecto5/pyproject.toml.
+# Inferencia: versiones verificadas en P5. psutil: adquisición G3 de P6.
 numpy==2.5.4
 onnxruntime==1.31.1
 opencv-python-headless==5.0.0.93
 PyYAML==6.0.3
+psutil==7.2.2

@@ -114,3 +114,24 @@ class EventRepository:
                 for row in ids
                 if (event := self._get_with_connection(connection, row["event_id"])) is not None
             ]
+
+    def list_by_identity(
+        self, source_id: str, model_version: str, config_version: str,
+        *, after: tuple[str, str] | None = None,
+    ) -> list[Event]:
+        """Recupera una serie ordenada sin mezclar fuentes ni versiones."""
+        query = (
+            "SELECT event_id FROM events WHERE source_id = ? AND model_version = ? "
+            "AND config_version = ?"
+        )
+        params: list[str] = [source_id, model_version, config_version]
+        if after is not None:
+            query += " AND (timestamp > ? OR (timestamp = ? AND event_id > ?))"
+            params.extend([after[0], after[0], after[1]])
+        query += " ORDER BY timestamp, event_id"
+        with closing(self.database.connect()) as connection:
+            ids = connection.execute(query, params).fetchall()
+            return [
+                event for row in ids
+                if (event := self._get_with_connection(connection, row["event_id"])) is not None
+            ]

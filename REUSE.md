@@ -1,6 +1,6 @@
 # Reutilización desde Proyecto 5
 
-Origen consultado en modo de solo lectura: `C:\Users\mafig\OneDrive - ITESO\Desktop\mlops\proyecto2\Equipo03-Proyecto05`. Las rutas de origen de la tabla son relativas a esa carpeta.
+Origen consultado en modo de solo lectura: el repositorio `Equipo03-Proyecto05` de P5. Las rutas de origen de la tabla son relativas a su raíz.
 
 | Componente | Ruta original P5 | Ruta destino P6 | Cambios |
 |---|---|---|---|
@@ -14,6 +14,6 @@ Origen consultado en modo de solo lectura: `C:\Users\mafig\OneDrive - ITESO\Desk
 | Configuración de modelo | `Proyecto5/docs/A1-02_PROCEDENCIA.md`, `Proyecto5/docs/A1-01_DETECTOR.md`, `Proyecto5/src/p5/detector/yolox.py` | `config/model.yaml`, `modelo/README.md` | Datos verificados y ruta de pesos de P6. |
 | Dependencias de inferencia | `Proyecto5/pyproject.toml`, `Proyecto5/requirements.lock.txt` | `requirements.txt` | Solo NumPy, ONNX Runtime, OpenCV headless y PyYAML; se excluyen dependencias de política y pruebas. |
 
-El archivo ONNX no estaba presente en P5 local. P6 lo obtuvo del release de YOLOX indicado por P5 y verificó su SHA-256. No se copiaron datasets, evidencias, políticas, casos, métricas, benchmark, control del carrito, portal ni infraestructura cloud.
+El archivo ONNX no estaba presente en la copia local de P5. P6 lo obtuvo del release de YOLOX indicado por P5 y verificó su SHA-256. No se copiaron datasets completos, políticas, casos, métricas, benchmark, control del carrito, portal ni infraestructura cloud. Dos imágenes originales seleccionadas para C1/C2 se conservan en `evidencias/escenarios/` con procedencia y SHA-256; no se alteraron.
 
 Código nuevo de P6: la interfaz `predict(frame)`, el JSON con `inference_time_ms`, el script de prueba, la configuración local y esta documentación. La salida de una imagen de prueba coincidió exactamente con la del `YoloxDetector` original de P5 usando los mismos pesos y dependencias.

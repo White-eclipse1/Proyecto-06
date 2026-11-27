@@ -51,6 +51,12 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def config_sha256(path: Path) -> str:
+    """Identidad de YAML estable entre checkouts LF y CRLF de Git en Windows."""
+    with path.open("r", encoding="utf-8", newline=None) as file:
+        return hashlib.sha256(file.read().encode("utf-8")).hexdigest()
+
+
 def write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as file:
@@ -100,7 +106,7 @@ def identity() -> dict[str, object]:
             "normal_sample_every": capture.normal_sample_every,
             "scenario_evidence": capture.scenario_evidence,
         },
-        "config_sha256": {name: sha256(ROOT / "config" / name) for name in CONFIG_FILES},
+        "config_sha256": {name: config_sha256(ROOT / "config" / name) for name in CONFIG_FILES},
     }
 
 
@@ -294,7 +300,7 @@ def run(scenario: str) -> dict[str, object]:
     if exit_code != 0:
         raise RuntimeError("falló el pipeline de monitoreo real")
     report = json.loads(captured_output.getvalue())
-    if {name: sha256(ROOT / "config" / name) for name in CONFIG_FILES} != before_hashes:
+    if {name: config_sha256(ROOT / "config" / name) for name in CONFIG_FILES} != before_hashes:
         raise RuntimeError("la configuración cambió durante la ejecución")
     database = Database(ROOT / "data" / "monitoring.db")
     observed = MetricRepository(database).events_for_run(report["run_id"])

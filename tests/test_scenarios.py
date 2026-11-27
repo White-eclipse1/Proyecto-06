@@ -7,7 +7,7 @@ from uuid import UUID
 
 import pytest
 
-from scripts.run_scenario import CONFIG_FILES, sha256, validate_same_identity
+from scripts.run_scenario import CONFIG_FILES, config_sha256, sha256, validate_same_identity
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "evidencias" / "escenarios"
@@ -45,8 +45,8 @@ def test_scenario_package_contains_real_input_config_and_api_ids(scenario):
     assert sha256(archive / manifest["input"]) == manifest["input_sha256"]
     for name in CONFIG_FILES:
         expected = manifest["identity"]["config_sha256"][name]
-        assert sha256(directory / "config_snapshot" / name) == expected
-        assert sha256(archive / "config_snapshot" / name) == expected
+        assert config_sha256(directory / "config_snapshot" / name) == expected
+        assert config_sha256(archive / "config_snapshot" / name) == expected
     assert {metric["metric_group"] for metric in metrics["metrics"]} == {
         "G1", "G2", "G3", "G4", "G5", "G6", "G7",
     }

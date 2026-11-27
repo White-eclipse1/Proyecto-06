@@ -15,11 +15,7 @@ El SHA-256 se calculó de la copia descargada en P6 y coincide con el valor regi
 
 ## Procedencia y obtención
 
-Repositorio P5 consultado, sin modificar:
-
-```text
-C:\Users\mafig\OneDrive - ITESO\Desktop\mlops\proyecto2\Equipo03-Proyecto05
-```
+Repositorio P5 consultado, sin modificar: `Equipo03-Proyecto05`. Las rutas `Proyecto5/...` de esta sección son relativas a su raíz.
 
 En P5, la ruta de ejecución prevista era `Proyecto5/models/yolox_tiny.onnx`; ese archivo no estaba presente en la copia local inspeccionada. P5 documenta el release y el hash en `Proyecto5/docs/A1-02_PROCEDENCIA.md`, y define la descarga verificada en `Proyecto5/src/p5/detector/weights.py`.
 

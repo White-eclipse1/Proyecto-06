@@ -16,6 +16,8 @@ python scripts/run_scenario.py --scenario normal
 python scripts/run_scenario.py --scenario low-confidence
 ```
 
+Estos comandos escriben nuevas corridas en `evidencias/escenarios/`. Para conservar los IDs definitivos de esta entrega, ejecútalos en un clon aislado.
+
 ---
 
 ## 1. Descripción
@@ -57,7 +59,7 @@ El objetivo del proyecto **no es volver a evaluar la calidad predictiva del mode
 
 Los objetivos principales son:
 
-- procesar una fuente visual como stream;
+- procesar imágenes reales individuales o secuencias de imágenes;
 - ejecutar inferencias reales sobre los frames recibidos;
 - monitorear métricas operativas del sistema;
 - conservar la confianza producida por el modelo;
@@ -141,8 +143,8 @@ El sistema de monitoreo desarrollado para P6 añade:
 ```text
                     ┌─────────────────────┐
                     │    Fuente visual    │
-                    │ cámara / video /    │
-                    │ secuencia imágenes  │
+                    │ imagen o secuencia  │
+                    │ de imágenes reales  │
                     └──────────┬──────────┘
                                │
                                ▼
@@ -227,7 +229,7 @@ El proyecto no depende de una plataforma cloud específica para poder ser evalua
 # 7. Estructura del repositorio
 
 ```text
-Proyecto6/
+Proyecto-06/
 │
 ├── README.md
 │
@@ -235,20 +237,23 @@ Proyecto6/
 │
 ├── config/
 │   ├── monitoring.yaml
-│   ├── thresholds.yaml
+│   ├── model.yaml
+│   ├── metrics.yaml
+│   ├── capture.yaml
 │   └── alerts.yaml
 │
 ├── modelo/
 │   ├── README.md
-│   └── [modelo o instrucciones de descarga]
+│   └── yolox_tiny.onnx (descarga verificada)
 │
 ├── src/
 │   ├── inference/
 │   ├── monitoring/
 │   ├── events/
+│   ├── captures/
+│   ├── metrics/
 │   ├── alerts/
 │   ├── persistence/
-│   ├── scenarios/
 │   └── portal/
 │
 ├── data/
@@ -256,10 +261,11 @@ Proyecto6/
 │   └── monitoring.db
 │
 ├── scripts/
-│   ├── run_monitor.py
-│   ├── run_scenario_c1.py
-│   ├── run_scenario_c2.py
-│   └── recalculate_metrics.py
+│   ├── run_monitoring_sample.py
+│   ├── run_scenario.py
+│   ├── run_portal.py
+│   ├── recalculate_metrics.py
+│   └── get_model.py
 │
 └── evidencias/
     ├── indice.md
@@ -283,7 +289,7 @@ Proyecto6/
     └── extras/
 ```
 
-Los nombres de archivos pueden variar durante la implementación, pero se conservará la misma separación lógica.
+La estructura resume los componentes principales. Las evidencias definitivas se identifican en `evidencias/escenarios/manifest.json`.
 
 ---
 
@@ -297,11 +303,11 @@ Los nombres de archivos pueden variar durante la implementación, pero se conser
 Clonar el repositorio:
 
 ```bash
-git clone <URL_REPOSITORIO>
-cd Proyecto6
+git clone https://github.com/White-eclipse1/Proyecto-06.git
+cd Proyecto-06
 ```
 
-Crear ambiente virtual:
+Crear ambiente virtual con Python **3.12** (`python --version` debe confirmarlo):
 
 ### Windows
 
@@ -313,7 +319,7 @@ python -m venv .venv
 ### Linux / macOS
 
 ```bash
-python3 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 ```
 
@@ -360,35 +366,13 @@ sustained_change:
   consecutive_windows: 2
 ```
 
-Los valores `0.60` y `0.80` son la configuración inicial propuesta.
-
-Antes de generar las evidencias finales de C1 y C2 se conservará la configuración utilizada y se documentará su justificación utilizando observaciones reales del modelo.
+Los valores `0.60` y `0.80` son límites operativos de la política, no umbrales calibrados contra accuracy. En la muestra real de 128 frames de `evidencias/metricas/resultados.json`, 115 tuvieron score: 45 quedaron bajo `0.60`, 32 entre ambos límites y 38 desde `0.80`; 13 fueron `NO_DETECTION`. La referencia de 20 observaciones puntuadas tuvo media `0.6135873986`. C1 produjo `0.8417058512` y C2 `0.3968369796` con la misma configuración. Estas observaciones muestran que los límites separan casos reales para monitoreo; no prueban corrección predictiva ni optimización estadística de los valores.
 
 ---
 
 # 10. Fuente visual
 
-El sistema admite una fuente visual funcional como stream.
-
-La implementación puede utilizar:
-
-- cámara del carrito del Proyecto 5;
-- webcam;
-- cámara externa;
-- archivo de video;
-- secuencia de imágenes.
-
-La fuente utilizada en la entrega final será documentada mediante:
-
-```text
-source_id
-source_type
-sampling_policy
-timestamp
-configuration_version
-```
-
-Si se utiliza video o una secuencia de imágenes, los frames se suministran progresivamente utilizando una frecuencia o política de reproducción definida.
+La fuente visual reproducible actual es una imagen o una secuencia de imágenes reales. `scripts/run_monitoring_sample.py` lee las rutas dadas con `--input` o, con `--input-dir`, los archivos de imagen en orden y procesa cada uno una vez. `--source-id` identifica la fuente; cada evento registra timestamp UTC y versión de configuración. `config/capture.yaml` conserva de forma selectiva eventos de baja confianza, alertas y una muestra normal cada 20 eventos aceptados. Los inputs C1/C2 y sus hashes están en `evidencias/escenarios/`. La captura de cámara o video en vivo sigue pendiente.
 
 ---
 
@@ -625,7 +609,7 @@ ms / inferencia
 
 ---
 
-## G2 · Captura y procesamiento del stream
+## G2 · Captura y procesamiento de imágenes
 
 ### Métrica base: FPS de procesamiento
 
@@ -747,12 +731,14 @@ También exporta `evidencias/alertas/alertas.json` con alertas existentes. G7 se
 
 # 20. Ejecución
 
+Los ejemplos que generan corridas o usan `--export` escriben en `data/` y/o `evidencias/`; ejecútalos en un clon aislado si deseas conservar intacta la evidencia definitiva.
+
 ## Inferencia real disponible
 
 Desde la raíz del repositorio, con una imagen propia o la imagen de prueba utilizada en la validación:
 
 ```powershell
-python scripts/test_inference.py --input "ruta\imagen.jpg"
+python scripts/test_inference.py --input evidencias/escenarios/normal/input/seq02-0001.jpg
 ```
 
 El JSON incluye `detections` con clase, confianza y caja, `confidence` máxima real (o `null` sin detecciones), `inference_time_ms` para la llamada al modelo y tiempos separados de lectura y procesamiento. También se puede usar `InferenceEngine.from_config("config/model.yaml").predict(frame)` con un frame BGR `uint8`. El script devuelve código distinto de cero ante cualquier fallo.
@@ -760,7 +746,7 @@ El JSON incluye `detections` con clase, confianza y caja, `confidence` máxima r
 ## Evento y SQLite disponibles
 
 ```powershell
-python scripts/test_event_pipeline.py --input "ruta\imagen.jpg"
+python scripts/test_event_pipeline.py --input evidencias/escenarios/normal/input/seq02-0001.jpg
 ```
 
 La salida JSON presenta el evento leído de SQLite y `persisted=true` solo si coincide con el generado. Puede usarse otra ruta con `--database` y otra fuente con `--source-id`.
@@ -782,7 +768,7 @@ Usar la misma ruta para `TEMP` y `--basetemp` produjo `WinError 32` al borrar el
 ## Muestra real de monitoreo disponible
 
 ```powershell
-python scripts/run_monitoring_sample.py --input-dir "ruta\imagenes" --source-id "local-image" --export
+python scripts/run_monitoring_sample.py --input evidencias/escenarios/normal/input/seq02-0001.jpg --input evidencias/escenarios/baja-confianza/input/camara-nueva.jpg --source-id "local-image" --export
 ```
 
 Se aceptan varias imágenes con `--input` repetido. El script aplica capturas selectivas y reglas de alerta, genera observaciones primarias, calcula G1–G7 y devuelve la referencia y el estado de sus ventanas. `--export` guarda CSV y JSON de evidencia desde SQLite.
@@ -790,7 +776,7 @@ Se aceptan varias imágenes con `--input` repetido. El script aplica capturas se
 ## Capturas y alertas disponibles
 
 ```powershell
-python scripts/test_alert_pipeline.py --input "ruta\imagen.jpg" --source-id "alert-demo" --export
+python scripts/test_alert_pipeline.py --input evidencias/escenarios/baja-confianza/input/camara-nueva.jpg --source-id "alert-demo" --export
 ```
 
 El JSON confirma evento, captura resoluble, alerta recuperada y G7. Una imagen que no cumpla la regla devuelve `alert_created=false` con código de salida `0`. `--export` copia una muestra vinculada a `evidencias/eventos/` y `evidencias/imagenes/`.
@@ -803,13 +789,7 @@ python scripts/run_portal.py
 
 Abrir `http://127.0.0.1:8000/events` para eventos y `http://127.0.0.1:8000/alerts` para alertas. Las páginas de detalle enlazan alerta → evento → captura cuando existe. La API de solo lectura ofrece `GET /api/events`, `GET /api/events/{event_id}`, `GET /api/alerts` y `GET /api/alerts/{alert_id}`; las listas aceptan `limit` y `offset`. `--database` y `--captures-dir` permiten elegir una base y capturas locales distintas. El portal no ejecuta inferencia ni escribe registros; requiere una base SQLite ya generada.
 
-El comando siguiente corresponde a una etapa futura del proyecto:
-
-## Ejecutar pipeline de monitoreo
-
-```bash
-python scripts/run_monitor.py
-```
+Para procesar una secuencia de imágenes y obtener G1–G7, usar el comando `run_monitoring_sample.py` mostrado arriba.
 
 ---
 
@@ -836,7 +816,7 @@ Fuente visual
 ### Ejecutar
 
 ```bash
-python scripts/run_scenario_c1.py
+python scripts/run_scenario.py --scenario normal
 ```
 
 ### Evidencia
@@ -892,7 +872,7 @@ Imagen difícil
 ### Ejecutar
 
 ```bash
-python scripts/run_scenario_c2.py
+python scripts/run_scenario.py --scenario low-confidence
 ```
 
 ### Evidencia
@@ -953,4 +933,4 @@ evidencias/
 
 # 24. Revisión Git
 
-Versión utilizada para la evidencia final
+La revisión auditada, el estado de Git, el resultado de reproducción en un clon aislado y los pendientes de entrega están documentados en [evidencias/auditoria-final.md](evidencias/auditoria-final.md). El mapa R1–R7 y los comandos por criterio están en [evidencias/indice.md](evidencias/indice.md). Los IDs definitivos de C1/C2 se consultan en [evidencias/escenarios/manifest.json](evidencias/escenarios/manifest.json); `runs/` conserva ejecuciones anteriores.

@@ -43,70 +43,25 @@
   },
   "git_by_scenario": {
     "normal": {
-      "commit": "067787ccf983cd2a013862f134589876dd0bf5ed",
+      "commit": "a9c862f215c168bbbc49c62b836e1aee3927946f",
       "branch": "main",
-      "status_porcelain_before": [
-        "M .gitignore",
-        "?? evidencias/escenarios/baja-confianza/README.md",
-        "?? evidencias/escenarios/baja-confianza/alert.json",
-        "?? evidencias/escenarios/baja-confianza/capturas/",
-        "?? evidencias/escenarios/baja-confianza/config_snapshot/",
-        "?? evidencias/escenarios/baja-confianza/event.json",
-        "?? evidencias/escenarios/baja-confianza/input/",
-        "?? evidencias/escenarios/baja-confianza/manifest.json",
-        "?? evidencias/escenarios/baja-confianza/metrics.json",
-        "?? evidencias/escenarios/baja-confianza/portal_alert.json",
-        "?? evidencias/escenarios/baja-confianza/portal_event.json",
-        "?? evidencias/escenarios/baja-confianza/result.json",
-        "?? evidencias/escenarios/baja-confianza/runs/",
-        "?? evidencias/escenarios/manifest.json",
-        "?? evidencias/escenarios/normal/README.md",
-        "?? evidencias/escenarios/normal/config_snapshot/",
-        "?? evidencias/escenarios/normal/event.json",
-        "?? evidencias/escenarios/normal/input/",
-        "?? evidencias/escenarios/normal/manifest.json",
-        "?? evidencias/escenarios/normal/metrics.json",
-        "?? evidencias/escenarios/normal/portal_alerts.json",
-        "?? evidencias/escenarios/normal/portal_event.json",
-        "?? evidencias/escenarios/normal/result.json",
-        "?? evidencias/escenarios/normal/runs/",
-        "?? evidencias/portal/CAPTURAS-PENDIENTES.md",
-        "?? scripts/run_scenario.py",
-        "?? tests/test_scenarios.py"
-      ],
-      "clean": false
+      "status_porcelain_before": [],
+      "clean": true
     },
     "low-confidence": {
-      "commit": "067787ccf983cd2a013862f134589876dd0bf5ed",
+      "commit": "a9c862f215c168bbbc49c62b836e1aee3927946f",
       "branch": "main",
       "status_porcelain_before": [
-        "M .gitignore",
-        "?? evidencias/escenarios/baja-confianza/README.md",
-        "?? evidencias/escenarios/baja-confianza/alert.json",
-        "?? evidencias/escenarios/baja-confianza/capturas/",
-        "?? evidencias/escenarios/baja-confianza/config_snapshot/",
-        "?? evidencias/escenarios/baja-confianza/event.json",
-        "?? evidencias/escenarios/baja-confianza/input/",
-        "?? evidencias/escenarios/baja-confianza/manifest.json",
-        "?? evidencias/escenarios/baja-confianza/metrics.json",
-        "?? evidencias/escenarios/baja-confianza/portal_alert.json",
-        "?? evidencias/escenarios/baja-confianza/portal_event.json",
-        "?? evidencias/escenarios/baja-confianza/result.json",
-        "?? evidencias/escenarios/baja-confianza/runs/",
-        "?? evidencias/escenarios/manifest.json",
-        "?? evidencias/escenarios/normal/README.md",
-        "?? evidencias/escenarios/normal/config_snapshot/",
-        "?? evidencias/escenarios/normal/event.json",
-        "?? evidencias/escenarios/normal/input/",
-        "?? evidencias/escenarios/normal/manifest.json",
-        "?? evidencias/escenarios/normal/metrics.json",
-        "?? evidencias/escenarios/normal/portal_alerts.json",
-        "?? evidencias/escenarios/normal/portal_event.json",
-        "?? evidencias/escenarios/normal/result.json",
-        "?? evidencias/escenarios/normal/runs/",
-        "?? evidencias/portal/CAPTURAS-PENDIENTES.md",
-        "?? scripts/run_scenario.py",
-        "?? tests/test_scenarios.py"
+        "M evidencias/escenarios/manifest.json",
+        " M evidencias/escenarios/normal/README.md",
+        " M evidencias/escenarios/normal/event.json",
+        " M evidencias/escenarios/normal/manifest.json",
+        " M evidencias/escenarios/normal/metrics.json",
+        " M evidencias/escenarios/normal/portal_alerts.json",
+        " M evidencias/escenarios/normal/portal_event.json",
+        " M evidencias/escenarios/normal/result.json",
+        " M evidencias/portal/CAPTURAS-PENDIENTES.md",
+        "?? evidencias/escenarios/normal/runs/68d02f03-6c07-47a7-8d8a-c014d6ae44aa/"
       ],
       "clean": false
     }
@@ -114,15 +69,15 @@
   "scenarios": {
     "normal": {
       "manifest": "normal/manifest.json",
-      "run_id": "b8e4c4cc-cb62-40be-92dc-936c40c16e23",
-      "event_id": "0363508f-bdac-4460-b59b-1c79c68cafd4",
-      "source_id": "scenario-c1-3590f7b9-9846-4711-bd10-fa141c2021af"
+      "run_id": "68d02f03-6c07-47a7-8d8a-c014d6ae44aa",
+      "event_id": "3f58257b-7de3-460b-8822-29e3eba3e77c",
+      "source_id": "scenario-c1-8ae08c4c-2137-4b37-a9bc-3a080f250bbd"
     },
     "low-confidence": {
       "manifest": "baja-confianza/manifest.json",
-      "run_id": "7ca8f608-6b30-4b5e-ab1f-5b30d0bc75e9",
-      "event_id": "36e70cb2-1b45-433c-9007-a516b8ead519",
-      "source_id": "scenario-c2-d865723c-27cb-43ba-a10d-75057e8d432e"
+      "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5",
+      "event_id": "558a9f31-57a3-4655-9b86-917a329d576c",
+      "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502"
     }
   }
 }

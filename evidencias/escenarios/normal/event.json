@@ -1,7 +1,7 @@
 {
-  "event_id": "0363508f-bdac-4460-b59b-1c79c68cafd4",
-  "timestamp": "2026-11-26T05:27:43.529431+00:00",
-  "source_id": "scenario-c1-3590f7b9-9846-4711-bd10-fa141c2021af",
+  "event_id": "3f58257b-7de3-460b-8822-29e3eba3e77c",
+  "timestamp": "2026-11-26T07:32:20.148037+00:00",
+  "source_id": "scenario-c1-8ae08c4c-2137-4b37-a9bc-3a080f250bbd",
   "model_version": "0.1.1rc0",
   "config_version": "monitoring-v1",
   "state": "ACCEPTED_BY_POLICY",
@@ -43,10 +43,10 @@
     }
   ],
   "detection_count": 3,
-  "read_time_ms": 2.2945000091567636,
-  "preprocessing_time_ms": 13.655000017024577,
-  "inference_time_ms": 33.524899976328015,
-  "postprocessing_time_ms": 4.955300013534725,
+  "read_time_ms": 1.4903000555932522,
+  "preprocessing_time_ms": 9.26869991235435,
+  "inference_time_ms": 33.24550006072968,
+  "postprocessing_time_ms": 6.558399996720254,
   "image_reference": null,
   "error_detail": null
 }

@@ -1,0 +1,115 @@
+{
+  "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
+  "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5",
+  "as_of": "2026-11-26T07:32:23.050579+00:00",
+  "metrics": [
+    {
+      "metric_group": "G1",
+      "metric_name": "inference_time_ms",
+      "value": 31.450099893845618,
+      "unit": "ms/inference",
+      "status": "OK",
+      "window_start": "2026-11-26T07:32:22.965969+00:00",
+      "window_end": "2026-11-26T07:32:22.965969+00:00",
+      "observation_count": 1,
+      "eligible_count": 1,
+      "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
+      "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5"
+    },
+    {
+      "metric_group": "G2",
+      "metric_name": "processing_fps",
+      "value": null,
+      "unit": "frames/second",
+      "status": "INSUFFICIENT_DATA",
+      "window_start": "2026-11-26T07:32:22.909280+00:00",
+      "window_end": "2026-11-26T07:32:23.033589+00:00",
+      "observation_count": 1,
+      "eligible_count": 0,
+      "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
+      "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5"
+    },
+    {
+      "metric_group": "G3",
+      "metric_name": "process_cpu_percent",
+      "value": 559.1,
+      "unit": "percent",
+      "status": "OK",
+      "window_start": "2026-11-26T07:32:22.965969+00:00",
+      "window_end": "2026-11-26T07:32:22.965969+00:00",
+      "observation_count": 1,
+      "eligible_count": 1,
+      "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
+      "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5"
+    },
+    {
+      "metric_group": "G4",
+      "metric_name": "low_confidence_ratio",
+      "value": 1.0,
+      "unit": "ratio",
+      "status": "OK",
+      "window_start": "2026-11-26T07:32:22.965969+00:00",
+      "window_end": "2026-11-26T07:32:22.965969+00:00",
+      "observation_count": 1,
+      "eligible_count": 1,
+      "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
+      "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5"
+    },
+    {
+      "metric_group": "G5",
+      "metric_name": "traceability_coverage",
+      "value": 1.0,
+      "unit": "ratio",
+      "status": "OK",
+      "window_start": "2026-11-26T07:32:22.965969+00:00",
+      "window_end": "2026-11-26T07:32:22.965969+00:00",
+      "observation_count": 1,
+      "eligible_count": 1,
+      "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
+      "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5"
+    },
+    {
+      "metric_group": "G6",
+      "metric_name": "last_report_age_seconds",
+      "value": 0.0846099853515625,
+      "unit": "seconds",
+      "status": "OK",
+      "window_start": "2026-11-26T07:32:22.965969+00:00",
+      "window_end": "2026-11-26T07:32:23.050579+00:00",
+      "observation_count": 1,
+      "eligible_count": 1,
+      "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
+      "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5"
+    },
+    {
+      "metric_group": "G7",
+      "metric_name": "active_alerts",
+      "value": 1,
+      "unit": "count",
+      "status": "OK",
+      "window_start": "2026-11-26T07:32:22.979974+00:00",
+      "window_end": "2026-11-26T07:32:23.050579+00:00",
+      "observation_count": 1,
+      "eligible_count": 1,
+      "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
+      "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5"
+    }
+  ],
+  "reference": null,
+  "reference_status": "INSUFFICIENT_DATA",
+  "windows": [
+    {
+      "window_id": null,
+      "state": "INSUFFICIENT_DATA",
+      "reference_id": null,
+      "observation_count": 0,
+      "mean_confidence": null,
+      "relative_drop": null,
+      "consecutive_drops": 0,
+      "event_ids": []
+    }
+  ],
+  "processed_images": 1,
+  "captured_images": 1,
+  "alerts_created": 1
+}

@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "scenario": "low-confidence",
+  "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5",
+  "event_id": "558a9f31-57a3-4655-9b86-917a329d576c",
+  "alert_id": "1a12681f-a90d-4adf-a2f1-fb0cfc00f291",
+  "confidence": 0.3968369795843003,
+  "confidence_zone": "LOW_CONFIDENCE",
+  "detection_count": 2,
+  "alert_count": 1,
+  "capture": "capturas/558a9f31-57a3-4655-9b86-917a329d576c.jpg",
+  "metric_statuses": {
+    "G1": "OK",
+    "G2": "INSUFFICIENT_DATA",
+    "G3": "OK",
+    "G4": "OK",
+    "G5": "OK",
+    "G6": "OK",
+    "G7": "OK"
+  }
+}

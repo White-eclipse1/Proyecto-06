@@ -1,0 +1,8 @@
+metrics:
+  G1: {applicable: true, base_metric: inference_time_ms, status: implemented}
+  G2: {applicable: true, base_metric: processing_fps, status: implemented}
+  G3: {applicable: true, base_metric: process_cpu_percent, status: implemented}
+  G4: {applicable: true, base_metric: low_confidence_ratio, status: implemented}
+  G5: {applicable: true, base_metric: traceability_coverage, status: implemented}
+  G6: {applicable: true, base_metric: last_report_age_seconds, status: implemented}
+  G7: {applicable: true, base_metric: active_alerts, status: implemented}

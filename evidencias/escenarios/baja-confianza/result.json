@@ -1,14 +1,14 @@
 {
   "status": "ok",
   "scenario": "low-confidence",
-  "run_id": "7ca8f608-6b30-4b5e-ab1f-5b30d0bc75e9",
-  "event_id": "36e70cb2-1b45-433c-9007-a516b8ead519",
-  "alert_id": "bcedf448-91d1-484b-aec6-f2e0636e04d2",
+  "run_id": "cd0c4669-cfa4-4d84-8014-ec6169af3de5",
+  "event_id": "558a9f31-57a3-4655-9b86-917a329d576c",
+  "alert_id": "1a12681f-a90d-4adf-a2f1-fb0cfc00f291",
   "confidence": 0.3968369795843003,
   "confidence_zone": "LOW_CONFIDENCE",
   "detection_count": 2,
   "alert_count": 1,
-  "capture": "capturas/36e70cb2-1b45-433c-9007-a516b8ead519.jpg",
+  "capture": "capturas/558a9f31-57a3-4655-9b86-917a329d576c.jpg",
   "metric_statuses": {
     "G1": "OK",
     "G2": "INSUFFICIENT_DATA",

@@ -1,0 +1,60 @@
+{
+  "schema_version": "scenario-evidence-v1",
+  "scenario": "normal",
+  "run_id": "68d02f03-6c07-47a7-8d8a-c014d6ae44aa",
+  "event_id": "3f58257b-7de3-460b-8822-29e3eba3e77c",
+  "alert_id": null,
+  "source_id": "scenario-c1-8ae08c4c-2137-4b37-a9bc-3a080f250bbd",
+  "generated_at": "2026-11-26T07:32:20.393569+00:00",
+  "input": "input/seq02-0001.jpg",
+  "input_sha256": "de5d68269a9d172fcb7a02514ed6a8363221326bd6eb2ff435f11fa9c64e1e14",
+  "source_provenance": "Proyecto5/data/p5-eval-v1/secuencias/seq02/seq02-0001.jpg",
+  "identity": {
+    "model_name": "YOLOX-Tiny",
+    "model_version": "0.1.1rc0",
+    "model_sha256": "427cc366d34e27ff7a03e2899b5e3671425c262ea2291f88bb942bc1cc70b0f7",
+    "model_file": "modelo/yolox_tiny.onnx",
+    "config_version": "monitoring-v1",
+    "lower_threshold": 0.6,
+    "upper_threshold": 0.8,
+    "alerts_config_version": "alerts-v1",
+    "capture_config_version": "capture-v1",
+    "alert_rules": {
+      "low_confidence": {
+        "enabled": true,
+        "minimum_events": 1,
+        "window_size": 1,
+        "severity": "WARNING",
+        "reason": "Low confidence from a scored model detection.",
+        "suggested_action": "Review the captured image and visual conditions."
+      },
+      "sustained_confidence_change": {
+        "enabled": false,
+        "severity": "WARNING",
+        "reason": "Sustained confidence decrease relative to the saved reference.",
+        "suggested_action": "Review the source and recent confidence windows."
+      }
+    },
+    "capture_policy": {
+      "directory": "data/captures",
+      "low_confidence": true,
+      "normal_sample_every": 20,
+      "scenario_evidence": true
+    },
+    "config_sha256": {
+      "model.yaml": "418a58aefba11ffcd4eda8dfca02448e2fd5d742e5eec11d680a1c9b7f678020",
+      "monitoring.yaml": "79650ac8310bbf233d34d9f60fa7d89dc96fb9273bce9de20120493c73e21b5a",
+      "metrics.yaml": "15273d51ed3101cf78b914ff9fe0d114596f7c092ecb809c1957f92879b15cb8",
+      "capture.yaml": "d58a13523c15aea9f6fb4ee905387c7ce13a2bd072d986f14c7a39b24d60200d",
+      "alerts.yaml": "5f52e9684f6275d509c0c160f1f7d187a048484262c2fff1771c1976c6cefb4c"
+    }
+  },
+  "git": {
+    "commit": "a9c862f215c168bbbc49c62b836e1aee3927946f",
+    "branch": "main",
+    "status_porcelain_before": [],
+    "clean": true
+  },
+  "capture": null,
+  "capture_sha256": null
+}

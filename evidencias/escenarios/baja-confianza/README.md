@@ -11,13 +11,13 @@ Ejecutar desde la raíz:
 python scripts/run_scenario.py --scenario low-confidence
 ```
 
-Esta corrida usó el archivo interno del repositorio. La evidencia vigente es la corrida `7ca8f608-6b30-4b5e-ab1f-5b30d0bc75e9`;
+Esta corrida usó el archivo interno del repositorio. La evidencia vigente es la corrida `cd0c4669-cfa4-4d84-8014-ec6169af3de5`;
 las reejecuciones anteriores se conservan en `runs/`.
 El working tree tenía cambios sin commit; el estado exacto previo está en `manifest.json`.
 
 | Campo | Valor |
 | --- | --- |
-| Git commit | `067787ccf983cd2a013862f134589876dd0bf5ed` |
+| Git commit | `a9c862f215c168bbbc49c62b836e1aee3927946f` |
 | Git branch | `main` |
 | Git limpio antes de la corrida | `False` |
 | Modelo | `YOLOX-Tiny` `0.1.1rc0` |
@@ -25,14 +25,14 @@ El working tree tenía cambios sin commit; el estado exacto previo está en `man
 | Configuración | `monitoring-v1` |
 | Threshold inferior | `0.6` |
 | Threshold superior | `0.8` |
-| Fuente | `scenario-c2-d865723c-27cb-43ba-a10d-75057e8d432e` |
-| Event ID | `36e70cb2-1b45-433c-9007-a516b8ead519` |
+| Fuente | `scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502` |
+| Event ID | `558a9f31-57a3-4655-9b86-917a329d576c` |
 | Confidence | `0.3968369795843003` |
 | Confidence zone | `LOW_CONFIDENCE` |
 | Detecciones | `2` |
 | Alertas del evento | `1` |
 
-Alerta `LOW_CONFIDENCE_ALERT` `bcedf448-91d1-484b-aec6-f2e0636e04d2` vinculada al evento.
+Alerta `LOW_CONFIDENCE_ALERT` `1a12681f-a90d-4adf-a2f1-fb0cfc00f291` vinculada al evento.
 
 Detecciones registradas:
 
@@ -43,12 +43,12 @@ Métricas de esta corrida:
 
 | Grupo y métrica | Valor | Estado |
 | --- | --- | --- |
-| G1 · inference_time_ms | `39.23729993402958` | `OK` |
+| G1 · inference_time_ms | `31.450099893845618` | `OK` |
 | G2 · processing_fps | `null` | `INSUFFICIENT_DATA` |
-| G3 · process_cpu_percent | `602.7` | `OK` |
+| G3 · process_cpu_percent | `559.1` | `OK` |
 | G4 · low_confidence_ratio | `1.0` | `OK` |
 | G5 · traceability_coverage | `1.0` | `OK` |
-| G6 · last_report_age_seconds | `0.10060501098632812` | `OK` |
+| G6 · last_report_age_seconds | `0.0846099853515625` | `OK` |
 | G7 · active_alerts | `1` | `OK` |
 
 `metrics.json` contiene G1–G7 recalculadas desde las observaciones SQLite de esta corrida. Algunas
@@ -58,7 +58,7 @@ métricas, como G2 con un solo frame, pueden tener `INSUFFICIENT_DATA`; se conse
 Las copias exactas de las configuraciones usadas están en `config_snapshot/`.
 
 Para verificarlo visualmente, ejecutar `python scripts/run_portal.py`, abrir
-`http://127.0.0.1:8000/events/36e70cb2-1b45-433c-9007-a516b8ead519` y `http://127.0.0.1:8000/alerts/bcedf448-91d1-484b-aec6-f2e0636e04d2`. La captura asociada está en
+`http://127.0.0.1:8000/events/558a9f31-57a3-4655-9b86-917a329d576c` y `http://127.0.0.1:8000/alerts/1a12681f-a90d-4adf-a2f1-fb0cfc00f291`. La captura asociada está en
 `capturas/` cuando la política decidió conservarla.
 
 No se editaron scores, detecciones ni thresholds para obtener este resultado.

@@ -763,7 +763,21 @@ El JSON incluye `detections` con clase, confianza y caja, `confidence` máxima r
 python scripts/test_event_pipeline.py --input "ruta\imagen.jpg"
 ```
 
-La salida JSON presenta el evento leído de SQLite y `persisted=true` solo si coincide con el generado. Puede usarse otra ruta con `--database` y otra fuente con `--source-id`. Para ejecutar las pruebas: `python -m pytest -q --basetemp=.pytest-tmp` tras instalar `requirements-dev.txt`.
+La salida JSON presenta el evento leído de SQLite y `persisted=true` solo si coincide con el generado. Puede usarse otra ruta con `--database` y otra fuente con `--source-id`.
+
+Para ejecutar toda la suite en Windows cuando el repositorio está en OneDrive, tras instalar `requirements-dev.txt`, utiliza un temporal de usuario fuera del repositorio. `--basetemp` debe ser un **subdirectorio distinto** de `TEMP`/`TMP`, porque pytest borra ese directorio al iniciar. La caché también se dirige fuera de OneDrive:
+
+```powershell
+$pytestRoot = Join-Path $env:LOCALAPPDATA 'pytest-p6-temp'
+New-Item -ItemType Directory -Force -Path $pytestRoot | Out-Null
+$env:TEMP = $pytestRoot
+$env:TMP = $pytestRoot
+$pytestBase = Join-Path $pytestRoot 'pytest-base'
+$pytestCache = Join-Path $pytestRoot 'pytest-cache'
+.\.venv\Scripts\python.exe -m pytest --basetemp="$pytestBase" -o "cache_dir=$pytestCache" -q
+```
+
+Usar la misma ruta para `TEMP` y `--basetemp` produjo `WinError 32` al borrar el temporal en Windows. La caché dentro de OneDrive también produjo avisos `WinError 5`. Ninguno requiere cambiar las pruebas ni el código de producción.
 
 ## Muestra real de monitoreo disponible
 

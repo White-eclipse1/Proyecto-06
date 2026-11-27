@@ -1,11 +1,45 @@
 {
-  "event_id_checked": "0363508f-bdac-4460-b59b-1c79c68cafd4",
+  "event_id_checked": "3f58257b-7de3-460b-8822-29e3eba3e77c",
   "requests": [
     {
       "url": "/api/alerts?limit=100&offset=0",
       "status_code": 200,
       "body": {
         "items": [
+          {
+            "alert_id": "a7335811-062d-4385-8430-b3cb2dc361ce",
+            "timestamp": "2026-11-26T05:28:19.865701+00:00",
+            "rule_id": "LOW_CONFIDENCE_ALERT",
+            "severity": "WARNING",
+            "reason": "Low confidence from a scored model detection.",
+            "suggested_action": "Review the captured image and visual conditions.",
+            "status": "ACTIVE",
+            "source_id": "scenario-compat-alert",
+            "config_version": "alerts-v1",
+            "event_id": "538361e7-ee64-43b3-93ff-94efdbf9dcc4",
+            "window_id": null,
+            "reference_id": null,
+            "resolved_at": null,
+            "event_url": "/events/538361e7-ee64-43b3-93ff-94efdbf9dcc4",
+            "image_url": "/captures/538361e7-ee64-43b3-93ff-94efdbf9dcc4.jpg"
+          },
+          {
+            "alert_id": "bcedf448-91d1-484b-aec6-f2e0636e04d2",
+            "timestamp": "2026-11-26T05:27:50.300891+00:00",
+            "rule_id": "LOW_CONFIDENCE_ALERT",
+            "severity": "WARNING",
+            "reason": "Low confidence from a scored model detection.",
+            "suggested_action": "Review the captured image and visual conditions.",
+            "status": "ACTIVE",
+            "source_id": "scenario-c2-d865723c-27cb-43ba-a10d-75057e8d432e",
+            "config_version": "alerts-v1",
+            "event_id": "36e70cb2-1b45-433c-9007-a516b8ead519",
+            "window_id": null,
+            "reference_id": null,
+            "resolved_at": null,
+            "event_url": "/events/36e70cb2-1b45-433c-9007-a516b8ead519",
+            "image_url": "/captures/36e70cb2-1b45-433c-9007-a516b8ead519.jpg"
+          },
           {
             "alert_id": "677730e5-8870-4b51-8c60-19d284ebf29e",
             "timestamp": "2026-11-26T05:25:36.567033+00:00",
@@ -840,7 +874,7 @@
             "image_url": "/captures/82a603bd-6b84-4a8e-8edb-3c563f185f9e.jpg"
           }
         ],
-        "count": 49,
+        "count": 51,
         "limit": 100,
         "offset": 0
       }

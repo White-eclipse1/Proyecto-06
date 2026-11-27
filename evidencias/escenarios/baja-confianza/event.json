@@ -1,7 +1,7 @@
 {
-  "event_id": "36e70cb2-1b45-433c-9007-a516b8ead519",
-  "timestamp": "2026-11-26T05:27:50.281164+00:00",
-  "source_id": "scenario-c2-d865723c-27cb-43ba-a10d-75057e8d432e",
+  "event_id": "558a9f31-57a3-4655-9b86-917a329d576c",
+  "timestamp": "2026-11-26T07:32:22.965969+00:00",
+  "source_id": "scenario-c2-3c5ae013-7178-49d7-93c4-03565a21c502",
   "model_version": "0.1.1rc0",
   "config_version": "monitoring-v1",
   "state": "LOW_CONFIDENCE",
@@ -32,10 +32,10 @@
     }
   ],
   "detection_count": 2,
-  "read_time_ms": 8.419400081038475,
-  "preprocessing_time_ms": 3.588200081139803,
-  "inference_time_ms": 39.23729993402958,
-  "postprocessing_time_ms": 5.319299991242588,
-  "image_reference": "capturas/36e70cb2-1b45-433c-9007-a516b8ead519.jpg",
+  "read_time_ms": 9.958900045603514,
+  "preprocessing_time_ms": 4.619500017724931,
+  "inference_time_ms": 31.450099893845618,
+  "postprocessing_time_ms": 4.481600015424192,
+  "image_reference": "capturas/558a9f31-57a3-4655-9b86-917a329d576c.jpg",
   "error_detail": null
 }

@@ -7,7 +7,7 @@
 **Proyecto:** Proyecto 6  
 **Universidad:** ITESO  
 
-**Estado actual:** inferencia real de P5, eventos y detecciones en SQLite, métricas G1–G7 recalculables, referencia de confianza, capturas selectivas, alertas persistentes y portal local de eventos y alertas implementados y probados. C1 → completed; C2 → completed con entradas reales, configuración fija y evidencia en [evidencias/escenarios/manifest.json](evidencias/escenarios/manifest.json). Stream en vivo y capturas visuales finales del portal siguen pendientes.
+**Estado actual:** inferencia real de P5, eventos y detecciones en SQLite, métricas G1–G7 recalculables, referencia de confianza, capturas selectivas, alertas persistentes y portal local de eventos y alertas implementados y probados. C1 y C2 están completos con entradas reales, configuración fija y evidencia en [evidencias/escenarios/manifest.json](evidencias/escenarios/manifest.json). Las [capturas visuales del portal](evidencias/portal/CAPTURAS-PENDIENTES.md) documentan seis vistas con cinco PNG. El stream en vivo sigue pendiente.
 
 Reproducir las demostraciones desde los inputs copiados al repositorio:
 

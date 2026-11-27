@@ -15,6 +15,7 @@ evidencias/**/*.jpg
 !evidencias/escenarios/**/capturas/*.jpg
 evidencias/**/*.jpeg
 evidencias/**/*.png
+!evidencias/portal/*.png
 *.log
 .env
 .env.*
